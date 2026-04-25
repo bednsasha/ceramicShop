@@ -7,7 +7,6 @@ class Category(models.Model):
     slug=models.CharField(max_length=100, unique=True)
     
     def save(self, *args, **kwargs): 
-        #Если не прописали вручную слаг в админке, то генерируем через slugify
         if not self.slug:
             self.slug= slugify(self.name)
         super().save(*args, **kwargs)
@@ -37,9 +36,11 @@ class ProductSize(models.Model):
     product=models.ForeignKey('Product', on_delete=models.CASCADE, related_name='product_size')
     size=models.ForeignKey(SizeAttribute,on_delete=models.CASCADE)
     stock=models.PositiveIntegerField(default=0)
-    
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        unique_together = ['product', 'size', 'value']
     def __str__(self):
-        return f"{self.size.name} ({self.stock} in stock) for {self.product.name}"
+        return f"{self.size.get_attribute_type_display()} ({self.stock} шт.) для {self.product.name}"
     
 class Product(models.Model):    
     name=models.CharField(max_length=100)
