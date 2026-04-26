@@ -17,7 +17,8 @@ class SizeAttributeInline(admin.TabularInline):
 class ProductSizeInline(admin.TabularInline):
     model = ProductSize
     extra = 1
-    #Отображение размеров для конкретной категории
+    # Отображение размеров для конкретной категории
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "size":
             product_id = request.resolver_match.kwargs.get('object_id')

@@ -33,7 +33,7 @@ class SizeAttribute(models.Model):
         unique_together = ['category', 'attribute_type']
         
 class ProductSize(models.Model):
-    product=models.ForeignKey('Product', on_delete=models.CASCADE, related_name='product_size')
+    product=models.ForeignKey('Product', on_delete=models.CASCADE, related_name='product_sizes')
     size=models.ForeignKey(SizeAttribute,on_delete=models.CASCADE)
     stock=models.PositiveIntegerField(default=0)
     value = models.DecimalField(max_digits=10, decimal_places=2)
