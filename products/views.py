@@ -17,13 +17,12 @@ class IndexView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         if request.headers.get("HX-Request"):
-            # ← исправлено
             return TemplateResponse(request, "products/home_content.html", context)
         return TemplateResponse(request, self.template_name, context)
 
 
 class CatalogView(TemplateView):
-    template_name = 'products/base.html'  # ← исправлено
+    template_name = 'products/base.html'
 
     FILTER_MAPPING = {
         'color': lambda queryset, value: queryset.filter(color__iexact=value),

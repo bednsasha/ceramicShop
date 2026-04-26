@@ -1,0 +1,44 @@
+<!-- Desktop Search Button -->
+<button id="search-toggle" 
+        hx-get="{% url 'product:catalog_all' %}?show_search=true" 
+        hx-target="#search-wrapper, #mobile-search-wrapper" 
+        hx-swap="outerHTML"
+        class="text-stone hover:text-terracotta transition-colors duration-300">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+    <span class="sr-only">Поиск</span>
+</button>
+
+<!-- Mobile Search Button (альтернативный вариант) -->
+<button id="mobile-search-toggle" 
+        hx-get="{% url 'product:catalog_all' %}?show_search=true" 
+        hx-target="#mobile-search-wrapper, #search-wrapper" 
+        hx-swap="outerHTML"
+        class="text-stone hover:text-terracotta transition-colors duration-300">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+    <span class="sr-only">Поиск</span>
+</button>
+
+<!-- Альтернативный вариант с текстом (если нужно показать текст) -->
+<button id="search-toggle-text" 
+        hx-get="{% url 'product:catalog_all' %}?show_search=true" 
+        hx-target="#search-wrapper, #mobile-search-wrapper" 
+        hx-swap="outerHTML"
+        class="text-sm font-medium tracking-wide text-stone hover:text-terracotta transition-colors duration-300 uppercase">
+    Поиск
+</button>
+
+<!-- Вариант с иконкой + текст -->
+<button id="search-toggle-combined" 
+        hx-get="{% url 'product:catalog_all' %}?show_search=true" 
+        hx-target="#search-wrapper, #mobile-search-wrapper" 
+        hx-swap="outerHTML"
+        class="flex items-center gap-2 text-sm font-medium tracking-wide text-stone hover:text-terracotta transition-colors duration-300">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+    <span>Поиск</span>
+</button>

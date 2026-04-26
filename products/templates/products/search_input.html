@@ -1,0 +1,160 @@
+<div class="relative inline-block">
+    <input type="text" 
+           id="search-input" 
+           name="q" 
+           placeholder="Поиск товаров..." 
+           value="{{ search_query|default:'' }}"
+           class="w-full md:w-64 lg:w-80 bg-cream/50 border border-pottery/30 rounded-lg py-2.5 pl-10 pr-8 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-all duration-300"
+           hx-get="{% url 'product:catalog_all' %}" 
+           hx-target="#main-content" 
+           hx-push-url="true"
+           hx-trigger="input delay:500ms"
+           hx-swap="innerHTML"
+           hx-indicator="#search-indicator">
+    
+    <!-- Search Icon - Left -->
+    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone/50 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+    
+    <!-- Clear Button -->
+    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone/50 hover:text-terracotta transition-colors duration-300"
+            id="clear-search-btn"
+            hx-get="{% url 'product:catalog_all' %}?reset_search=true" 
+            hx-target="#search-wrapper, #mobile-search-wrapper"
+            hx-swap="outerHTML">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+</div>
+
+<!-- Loading Indicator -->
+<div id="search-indicator" class="htmx-indicator" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%);">
+    <svg class="w-4 h-4 text-terracotta animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const clearBtn = document.getElementById('clear-search-btn');
+        
+        // Initial clear button visibility
+        function updateClearButton() {
+            if (clearBtn) {
+                if (searchInput && searchInput.value) {
+                    clearBtn.style.opacity = '1';
+                    clearBtn.style.visibility = 'visible';
+                } else {
+                    clearBtn.style.opacity = '0';
+                    clearBtn.style.visibility = 'hidden';
+                }
+            }
+        }
+        
+        if (searchInput) {
+            // Handle placeholder on focus/blur
+            searchInput.addEventListener('focus', function() {
+                if (!this.value) {
+                    this.placeholder = '';
+                }
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.placeholder = 'Поиск товаров...';
+                }
+            });
+            
+            // Show/hide clear button based on input value
+            searchInput.addEventListener('input', function() {
+                updateClearButton();
+            });
+            
+            // Auto-focus when search is opened
+            searchInput.focus();
+            
+            // Select all text on focus
+            searchInput.addEventListener('focus', function() {
+                this.select();
+            });
+        }
+        
+        // Initial update
+        updateClearButton();
+        
+        // Handle ESC key to close search
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchInput && document.activeElement === searchInput) {
+                searchInput.blur();
+                if (!searchInput.value) {
+                    const resetBtn = document.querySelector('[hx-get*="reset_search=true"]');
+                    if (resetBtn) {
+                        resetBtn.click();
+                    }
+                }
+            }
+        });
+    });
+    
+    // HTMX event to refocus after search
+    document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.target.id === 'main-content') {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput && searchInput.value) {
+                searchInput.focus();
+            }
+        }
+    });
+</script>
+
+<style>
+    /* Clear button initial state */
+    #clear-search-btn {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    
+    /* Search input animation */
+    #search-input {
+        transition: all 0.3s ease;
+    }
+    
+    #search-input:focus {
+        width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+        #search-input:focus {
+            width: 320px;
+        }
+    }
+    
+    /* Spinner animation */
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    /* HTMX indicator styles */
+    .htmx-indicator {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    
+    .htmx-request .htmx-indicator {
+        opacity: 1;
+    }
+    
+    .htmx-request.htmx-indicator {
+        opacity: 1;
+    }
+</style>
