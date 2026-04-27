@@ -1,21 +1,28 @@
 from django.db import models
+from django.conf import settings
 from decimal import Decimal
-from products.models import Product, ProductSize  
+from products.models import Product, ProductSize
 
 
 class Cart(models.Model):
-
     session_key = models.CharField(max_length=40, unique=True, blank=True, null=True)
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True, related_name='carts')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # ← вместо 'auth.User'
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True, 
+        related_name='carts'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
     
     def __str__(self):
         if self.user:
-            return f"Корзина {self.user.username}"
+            return f"Корзина {self.user.email}"
         return f"Корзина {self.session_key}"
     
     @property
@@ -62,8 +69,6 @@ class Cart(models.Model):
     
     def clear(self):
         self.items.all().delete()
-    
-   
 
 
 class CartItem(models.Model):
@@ -82,11 +87,8 @@ class CartItem(models.Model):
         return f"{self.product.name} - {self.get_size_display()} x {self.quantity}"
     
     def get_size_display(self):
-
         return f"{self.product_size.size.get_attribute_type_display()}: {self.product_size.value}"
     
     @property
     def total_price(self):
         return Decimal(str(self.product.price)) * self.quantity
-    
-    
