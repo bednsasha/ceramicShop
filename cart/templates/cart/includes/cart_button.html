@@ -1,0 +1,13 @@
+```html
+{% load cart_tags %}
+<button class="relative group" onclick="openCart()">
+    <svg class="w-5 h-5 text-stone group-hover:text-terracotta transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6m12 0l-1.5-6M9 21h6m-6 0a1.5 1.5 0 11-3 0m9 0a1.5 1.5 0 11-3 0"></path>
+    </svg>
+    {% if cart_total_items > 0 %}
+    <span class="absolute -top-2 -right-2 h-5 w-5 bg-terracotta text-white text-xs rounded-full flex items-center justify-center font-medium">
+        {{ cart_total_items }}
+    </span>
+    {% endif %}
+</button>
+```

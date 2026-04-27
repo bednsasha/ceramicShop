@@ -1,0 +1,114 @@
+<div id="cart-modal" class="fixed right-0 top-0 h-screen w-full max-w-md bg-cream shadow-2xl z-50 transition-transform duration-300 transform translate-x-full">
+    <div class="h-full flex flex-col">
+        <!-- Cart Header -->
+        <div class="flex justify-between items-center p-6 border-b border-pottery/20">
+            <h1 class="font-serif text-2xl text-potteryDark">КОРЗИНА (<span id="cart-count">{{ cart.total_items }}</span>)</h1>
+            <button onclick="closeCart()" class="text-3xl text-stone hover:text-terracotta transition-colors">&times;</button>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="flex-1 overflow-y-auto p-6">
+            <div id="cart-items" class="space-y-6">
+                {% for item in cart_items %}
+                    {% include 'cart/cart_item.html' %}
+                {% empty %}
+                    <div class="text-center py-20">
+                        <svg class="w-20 h-20 mx-auto text-pottery/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6m12 0l-1.5-6M9 21h6m-6 0a1.5 1.5 0 11-3 0m9 0a1.5 1.5 0 11-3 0"></path>
+                        </svg>
+                        <p class="text-stone text-lg mb-4">Ваша корзина пуста</p>
+                        <button onclick="closeCart()" class="text-terracotta hover:text-terracotta/70 underline text-sm">Продолжить покупки</button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Cart Footer -->
+        <div id="cart-summary" class="border-t border-pottery/20 p-6 bg-cream/80">
+            {% if cart_items %}
+                {% include 'cart/cart_summary.html' %}
+            {% else %}
+                <div class="text-center text-stone">
+                    <p>Ваша корзина пуста</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Cart Overlay -->
+<div id="cart-overlay" class="fixed inset-0 bg-black/40 z-40 transition-all duration-300 opacity-0 invisible"></div>
+
+<style>
+    #cart-modal {
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    #cart-modal.open {
+        transform: translateX(0);
+    }
+    #cart-modal.closed {
+        transform: translateX(100%);
+    }
+    #cart-overlay {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+    #cart-overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+    #cart-overlay.closed {
+        opacity: 0;
+        visibility: hidden;
+    }
+</style>
+
+<script>
+    function openCart() {
+        const modal = document.getElementById('cart-modal');
+        const overlay = document.getElementById('cart-overlay');
+        if (modal && overlay) {
+            modal.classList.remove('closed');
+            modal.classList.add('open');
+            overlay.classList.remove('closed');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeCart() {
+        const modal = document.getElementById('cart-modal');
+        const overlay = document.getElementById('cart-overlay');
+        if (modal && overlay) {
+            modal.classList.remove('open');
+            modal.classList.add('closed');
+            overlay.classList.remove('open');
+            overlay.classList.add('closed');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Close on overlay click
+    document.addEventListener('click', function(e) {
+        const overlay = document.getElementById('cart-overlay');
+        if (e.target === overlay) {
+            closeCart();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeCart();
+        }
+    });
+
+    // Open cart when modal is loaded via HTMX
+    document.addEventListener('htmx:afterSwap', function(evt) {
+        if (evt.detail.elt.id === 'cart-modal' || evt.detail.elt.closest('#cart-modal')) {
+            openCart();
+        }
+    });
+</script>

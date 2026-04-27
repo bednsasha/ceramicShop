@@ -1,0 +1,36 @@
+<!-- Empty div to replace removed item -->
+<div style="display: none;" data-removed-item="{{ item_id }}"></div>
+
+<script>
+    // Update cart totals
+    htmx.ajax('GET', '{% url "cart:cart_count" %}', {
+        target: '#cart-count',
+        swap: 'none',
+        onLoad: function(response) {
+            const data = JSON.parse(response);
+            document.getElementById('cart-count').textContent = data.total_items;
+            updateHeaderCartCount(data.total_items);
+            
+            // Update subtotal
+            const subtotalElement = document.querySelector('#cart-summary .font-medium:last-child');
+            if (subtotalElement) {
+                subtotalElement.textContent = data.subtotal_display || data.subtotal + ' ₽';
+            }
+            
+            // Update total items display
+            const totalItemsElement = document.querySelector('#cart-summary .text-stone');
+            if (totalItemsElement && data.total_items) {
+                const itemsText = data.total_items === 1 ? 'товар' : (data.total_items < 5 ? 'товара' : 'товаров');
+                totalItemsElement.textContent = data.total_items + ' ' + itemsText;
+            }
+            
+            // If cart is empty, show empty message
+            if (data.total_items === 0) {
+                htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
+                    target: '#cart-modal',
+                    swap: 'outerHTML'
+                });
+            }
+        }
+    });
+</script>
