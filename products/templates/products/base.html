@@ -303,40 +303,17 @@
     <div class="htmx-indicator fixed top-0 left-0 w-full h-0.5 bg-[#C4A690] z-50 transition-all duration-200"></div>
 
     <!-- Main Content -->
-    <div id="main-content" class="min-h-[70vh]">
-        {% block content %}
-        <!-- Default home content with ceramic-focused design -->
-        <main class="mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="text-center py-12 max-w-3xl mx-auto">
-                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-[#4A3B32] mb-4">
-                    Handcrafted <span class="font-semibold">Ceramics</span>
-                </h2>
-                <p class="text-base text-[#7A685A] mb-8 leading-relaxed">
-                    Functional art for your table — each piece is unique, 
-                    shaped by hand and finished with natural glazes.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-8">
-                    {% for category in categories %}
-                    <a href="{% url 'products:catalog' category.slug %}" 
-                       hx-get="{% url 'products:catalog' category.slug %}" 
-                       hx-target="#main-content" 
-                       hx-push-url="true"
-                       class="category-card block p-8 rounded-md shadow-sm transition-all">
-                        <h3 class="text-xl font-medium tracking-wide mb-2">{{ category.name|title }}</h3>
-                        <p class="text-sm text-[#7A685A]">Explore collection →</p>
-                    </a>
-                    {% endfor %}
-                </div>
-                <!-- Decorative element -->
-                <div class="mt-16 flex justify-center gap-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#C4A690]"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#D9E0D2]"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#E3C9B7]"></span>
-                </div>
-            </div>
-        </main>
-        {% endblock %}
-    </div>
+
+<div id="main-content" class="min-h-[70vh]">
+    {% if product %}
+        {% include "products/product_detail.html" with product=product %}
+    {% elif products %}
+        {% include "products/catalog.html" %}
+    {% else %}
+        {% include "products/home_content.html" %}
+    {% endif %}
+</div>
+       
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

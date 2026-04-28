@@ -3,7 +3,7 @@
     <p class="text-sm text-stone">{{ user.first_name }} {{ user.last_name }}</p>
     <p class="text-sm text-stone">{{ user.address1|default:"" }}{% if user.address2 %} {{ user.address2 }}{% endif %}</p>
     <p class="text-sm text-stone">
-        {% if user.city %}{{ user.city }}{% endif %}{% if user.city and user.county %}, {% endif %}{{ user.country|default:"Не указана" }}
+        {% if user.city %}{{ user.city }}{% endif %}{% if user.city and user.country %}, {% endif %}{{ user.country|default:"Не указана" }}
         {% if user.postal_code %}, {{ user.postal_code }}{% endif %}
     </p>
     {% if user.phone %}

@@ -91,7 +91,6 @@ def update_account_details(request):
 
 
 def logout_view(request):
-    logout(request)
     if request.headers.get('HX-Request'):
         return HttpResponse(headers={'HX-Redirect': reverse('products:index')})
     return redirect('products:index')

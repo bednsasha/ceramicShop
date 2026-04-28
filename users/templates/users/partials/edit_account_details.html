@@ -111,11 +111,28 @@
 </form>
 
 <style>
+    input, select {
+        width: 100%;
+        border: 1px solid rgba(210, 187, 165, 0.3);
+        border-radius: 0.5rem;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        color: #8B7D6B;
+        background-color: rgba(250, 247, 242, 0.5);
+        transition: all 0.3s ease;
+    }
+    input:focus, select:focus {
+        outline: none;
+        border-color: #E07A5F;
+        ring: 1px solid #E07A5F;
+    }
     .btn-primary {
         background-color: #E07A5F;
         color: white;
         border-radius: 9999px;
         transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
     }
     .btn-primary:hover {
         background-color: #C86A50;
@@ -136,9 +153,3 @@
         transform: translateY(-2px);
     }
 </style>
-
-<script>
-    document.querySelectorAll('input, select, textarea').forEach(input => {
-        input.classList.add('w-full', 'border', 'border-pottery/30', 'rounded-lg', 'py-2.5', 'px-4', 'text-sm', 'text-stone', 'placeholder-stone/50', 'focus:outline-none', 'focus:border-terracotta', 'focus:ring-1', 'focus:ring-terracotta', 'transition-colors', 'bg-cream/50');
-    });
-</script>

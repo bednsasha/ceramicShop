@@ -99,7 +99,7 @@ class CatalogView(TemplateView):
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'products/product_detail.html'
+    template_name = 'products/base.html'
     slug_field = "slug"
     slug_url_kwarg = 'slug'
 
@@ -113,10 +113,11 @@ class ProductDetailView(DetailView):
         context['current_category'] = product.category
         return context
 
+       
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(**kwargs)
-
         if request.headers.get('HX-Request'):
-            return TemplateResponse(request, 'products/product_detail_content.html', context)
+            return TemplateResponse(request, 'products/product_detail.html', context)
         return TemplateResponse(request, self.template_name, context)

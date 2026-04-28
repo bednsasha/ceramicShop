@@ -1,3 +1,4 @@
+
 <main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
     <div class="mb-8">
@@ -63,7 +64,7 @@
                     {{ product.get_glaze_type_display }}
                 </span>
                 {% endif %}
-                <p class="text-2xl font-medium text-[#4A3B32] mt-2">${{ product.price }}</p>
+                <p class="text-2xl font-medium text-[#4A3B32] mt-2">{{ product.price }} ₽</p>
             </div>
 
             <!-- Product Sizes (from ProductSize model) -->
@@ -84,28 +85,29 @@
                                {% if product_size.stock == 0 %}disabled{% endif %}
                                {% if forloop.first and product_size.stock > 0 %}checked{% endif %}>
                         <label for="size-{{ product_size.id }}"
-                               class="inline-block border border-[#E8E2D9] py-2 px-3 text-sm font-medium text-center cursor-pointer hover:border-[#C4A690] transition-all {% if product_size.stock == 0 %}opacity-40 cursor-not-allowed bg-[#F4E9DD]{% endif %}">
-                            {{ product_size.value|floatformat:"0" }}
-                            {% if product_size.size.attribute_type == 'volume' %}ml
-                            {% elif product_size.size.attribute_type == 'diameter' %}cm Ø
-                            {% elif product_size.size.attribute_type == 'height' %}cm H
-                            {% elif product_size.size.attribute_type == 'width' %}cm W
-                            {% elif product_size.size.attribute_type == 'depth' %}cm D
-                            {% elif product_size.size.attribute_type == 'length' %}cm L
-                            {% endif %}
-                        </label>
-                    </div>
+                        class="inline-block border border-[#E8E2D9] py-2 px-3 text-sm font-medium text-center cursor-pointer hover:border-[#C4A690] transition-all {% if product_size.stock == 0 %}opacity-40 cursor-not-allowed bg-[#F4E9DD]{% endif %}">
+                        {{ product_size.value|floatformat:"0" }}
+                        {% if product_size.size.attribute_type == 'volume' %}мл
+                        {% elif product_size.size.attribute_type == 'diameter' %}см Ø
+                        {% elif product_size.size.attribute_type == 'height' %}см H
+                        {% elif product_size.size.attribute_type == 'width' %}см W
+                        {% elif product_size.size.attribute_type == 'depth' %}см D
+                        {% elif product_size.size.attribute_type == 'length' %}см L
+                        {% endif %}
+                    </label>
+                                        </div>
                     {% endfor %}
                 </div>
                 {% for product_size in product.product_sizes.all %}
                     {% if forloop.first and product_size.size.attribute_type %}
                     <p class="text-xs text-[#7A685A] mt-2">
-                        {% if product_size.size.attribute_type == 'volume' %}Capacity in milliliters
-                        {% elif product_size.size.attribute_type == 'diameter' %}Diameter in centimeters
-                        {% elif product_size.size.attribute_type == 'height' %}Height in centimeters
-                        {% elif product_size.size.attribute_type == 'width' %}Width in centimeters
-                        {% elif product_size.size.attribute_type == 'depth' %}Depth in centimeters
-                        {% elif product_size.size.attribute_type == 'length' %}Length in centimeters
+                        {% if product_size.size.attribute_type == 'volume' %}Объем в миллилитрах
+                        {% elif product_size.size.attribute_type == 'diameter' %}Диаметр в сантиметрах
+                        {% elif product_size.size.attribute_type == 'height' %}Высота в сантиметрах
+                        {% elif product_size.size.attribute_type == 'width' %}Ширина в сантиметрах
+                        {% elif product_size.size.attribute_type == 'depth' %}Глубина в сантиметрах
+                        {% elif product_size.size.attribute_type == 'length' %}Длина в сантиметрах
+
                         {% endif %}
                     </p>
                     {% endif %}
@@ -124,12 +126,10 @@
                         class="w-full bg-[#4A3B32] text-white py-3 px-6 text-sm font-medium uppercase tracking-wide hover:bg-[#C4A690] transition-colors duration-200"
                         onclick="addToCart()"
                         {% if not product.product_sizes.all %}disabled{% endif %}>
-                    Add to Cart
+                    Добавить в корзину
                 </button>
                 
-                <button class="w-full border border-[#E8E2D9] bg-white py-3 px-6 text-sm font-medium text-[#4A3B32] uppercase tracking-wide hover:border-[#C4A690] hover:text-[#C4A690] transition-colors">
-                    Add to Wishlist
-                </button>
+               
             </div>
 
             <!-- Product Description -->
@@ -147,11 +147,10 @@
 
             <!-- Care Information -->
             <div class="border-t border-[#E8E2D9] pt-6">
-                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Care</h3>
+                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Уход</h3>
                 <div class="text-sm text-[#5A4A3E]">
-                    <p>Dishwasher and microwave safe<br>
-                    Hand wash recommended for reactive glaze pieces<br>
-                    Avoid sudden temperature changes</p>
+                    <p>
+💡 Уход без хлопот: Кружка пригодна для мытья в посудомоечной машине и использования в микроволновой печи — декор и покрытие не теряют яркости. Не бойтесь нагревать, смело ставьте в СВЧ и мойте в ПММ.</p>
                 </div>
             </div>
         </div>

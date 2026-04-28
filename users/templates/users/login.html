@@ -1,14 +1,14 @@
 {% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4">
-    <div class="bg-cream rounded-xl soft-border p-8 w-full max-w-md">
-        <h1 class="font-serif text-3xl text-potteryDark text-center mb-8 tracking-wide">
-            Вход в аккаунт
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-900 mb-8 text-center tracking-wide">
+            ВОЙТИ
         </h1>
         
         {% if messages %}
-            <div class="mb-4 space-y-2">
+            <div class="mb-4">
                 {% for message in messages %}
-                    <div class="text-terracotta text-sm text-center">{{ message }}</div>
+                    <div class="text-red-500 text-sm text-center">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
@@ -20,49 +20,37 @@
             {% csrf_token %}
             
             <div>
-                <label class="block text-sm font-medium text-stone mb-1">Email</label>
                 {{ form.username }}
                 {% if form.username.errors %}
-                    <div class="text-terracotta text-xs mt-1">{{ form.username.errors }}</div>
+                    <div class="text-red-500 text-xs mt-1">{{ form.username.errors }}</div>
                 {% endif %}
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-stone mb-1">Пароль</label>
                 {{ form.password }}
                 {% if form.password.errors %}
-                    <div class="text-terracotta text-xs mt-1">{{ form.password.errors }}</div>
+                    <div class="text-red-500 text-xs mt-1">{{ form.password.errors }}</div>
                 {% endif %}
             </div>
             
-            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <div class="grid grid-cols-2 gap-4 pt-4">
                 <button 
                     type="submit"
-                    class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide"
+                    class="bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide"
                 >
-                    Войти
+                    ВОЙТИ
                 </button>
                 <a 
                     href="{% url 'users:register' %}"
                     hx-get="{% url 'users:register' %}"
                     hx-target="#main-content"
                     hx-push-url="true"
-                    class="w-full btn-outline py-3 px-6 text-sm font-medium tracking-wide text-center"
+                    class="border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide text-center"
                 >
-                    Создать аккаунт
+                    СОЗДАТЬ АККАУНТ
                 </a>
             </div>
         </form>
-        
-        <div class="text-center mt-6">
-            <a href="{% url 'products:index' %}" 
-               hx-get="{% url 'products:index' %}"
-               hx-target="#main-content"
-               hx-push-url="true"
-               class="text-sm text-stone hover:text-terracotta transition-colors">
-                ← Вернуться на главную
-            </a>
-        </div>
     </div>
 </div>
 {% endblock %}

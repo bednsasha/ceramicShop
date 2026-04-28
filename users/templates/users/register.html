@@ -1,19 +1,19 @@
 {% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4">
-    <div class="bg-cream rounded-xl soft-border p-8 w-full max-w-md">
-        <h1 class="font-serif text-3xl text-potteryDark text-center mb-8 tracking-wide">
-            Создать аккаунт
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-900 mb-8 text-center tracking-wide">
+            СОЗДАТЬ АККАУНТ
         </h1>
         
         {% if messages %}
-            <div class="mb-4 space-y-2">
+            <div class="mb-4">
                 {% for message in messages %}
-                    <div class="text-terracotta text-sm text-center">{{ message }}</div>
+                    <div class="text-red-500 text-sm text-center">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
         
-        <form id="createAccountForm" method="post" class="space-y-5" 
+        <form id="createAccountForm" method="post" class="space-y-6" 
               hx-post="{% url 'users:register' %}" 
               hx-target="#main-content"
               hx-push-url="true">
@@ -21,106 +21,63 @@
             
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-stone mb-1">Имя</label>
                     {{ form.first_name }}
                     {% if form.first_name.errors %}
-                        <div class="text-terracotta text-xs mt-1">{{ form.first_name.errors }}</div>
+                        <div class="text-red-500 text-xs mt-1">{{ form.first_name.errors }}</div>
                     {% endif %}
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-stone mb-1">Фамилия</label>
                     {{ form.last_name }}
                     {% if form.last_name.errors %}
-                        <div class="text-terracotta text-xs mt-1">{{ form.last_name.errors }}</div>
+                        <div class="text-red-500 text-xs mt-1">{{ form.last_name.errors }}</div>
                     {% endif %}
                 </div>
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-stone mb-1">Email</label>
                 {{ form.email }}
                 {% if form.email.errors %}
-                    <div class="text-terracotta text-xs mt-1">{{ form.email.errors }}</div>
+                    <div class="text-red-500 text-xs mt-1">{{ form.email.errors }}</div>
                 {% endif %}
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-stone mb-1">Пароль</label>
                 {{ form.password1 }}
                 {% if form.password1.errors %}
-                    <div class="text-terracotta text-xs mt-1">{{ form.password1.errors }}</div>
+                    <div class="text-red-500 text-xs mt-1">{{ form.password1.errors }}</div>
                 {% endif %}
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-stone mb-1">Подтвердите пароль</label>
                 {{ form.password2 }}
                 {% if form.password2.errors %}
-                    <div class="text-terracotta text-xs mt-1">{{ form.password2.errors }}</div>
+                    <div class="text-red-500 text-xs mt-1">{{ form.password2.errors }}</div>
                 {% endif %}
-                <div id="passwordError" class="text-terracotta text-xs mt-1 hidden">
+                <div id="passwordError" class="text-red-500 text-xs mt-1 hidden">
                     Пароли не совпадают
                 </div>
             </div>
             
-            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <div class="grid grid-cols-2 gap-4 pt-4">
                 <button 
                     type="submit"
-                    class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide"
+                    class="bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide"
                 >
-                    Создать аккаунт
+                    СОЗДАТЬ АККАУНТ
                 </button>
                 <a 
                     href="{% url 'users:login' %}"
                     hx-get="{% url 'users:login' %}"
                     hx-target="#main-content"
                     hx-push-url="true"
-                    class="w-full btn-outline py-3 px-6 text-sm font-medium tracking-wide text-center"
+                    class="border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide text-center"
                 >
-                    Войти
+                    ВОЙТИ
                 </a>
             </div>
         </form>
-        
-        <div class="text-center mt-6">
-            <a href="{% url 'products:index' %}" 
-               hx-get="{% url 'products:index' %}"
-               hx-target="#main-content"
-               hx-push-url="true"
-               class="text-sm text-stone hover:text-terracotta transition-colors">
-                ← Вернуться на главную
-            </a>
-        </div>
     </div>
 </div>
-
-<style>
-    .soft-border {
-        border: 1px solid rgba(210, 187, 165, 0.3);
-    }
-    .btn-primary {
-        background-color: #E07A5F;
-        color: white;
-        border-radius: 9999px;
-        transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-        background-color: #C86A50;
-        transform: translateY(-2px);
-    }
-    .btn-outline {
-        border: 1.5px solid #D2BBA5;
-        background-color: transparent;
-        color: #8B7D6B;
-        border-radius: 9999px;
-        transition: all 0.3s ease;
-    }
-    .btn-outline:hover {
-        background-color: #D2BBA5;
-        color: white;
-        transform: translateY(-2px);
-    }
-</style>
 
 <script>
     const form = document.getElementById('createAccountForm');
@@ -133,32 +90,26 @@
         const confirmPassword = confirmPasswordInput.value;
         if (confirmPassword && password !== confirmPassword) {
             passwordError.classList.remove('hidden');
-            confirmPasswordInput.classList.add('border-terracotta');
+            confirmPasswordInput.classList.add('border-red-500');
             return false;
         } else {
             passwordError.classList.add('hidden');
-            confirmPasswordInput.classList.remove('border-terracotta');
+            confirmPasswordInput.classList.remove('border-red-500');
             return true;
         }
     }
 
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', validatePasswords);
-    }
-    if (passwordInput) {
-        passwordInput.addEventListener('input', () => {
-            if (confirmPasswordInput && confirmPasswordInput.value) {
-                validatePasswords();
-            }
-        });
-    }
+    confirmPasswordInput.addEventListener('input', validatePasswords);
+    passwordInput.addEventListener('input', () => {
+        if (confirmPasswordInput.value) {
+            validatePasswords();
+        }
+    });
 
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            if (confirmPasswordInput && passwordInput && !validatePasswords()) {
-                e.preventDefault();
-            }
-        });
-    }
+    form.addEventListener('submit', function(e) {
+        if (!validatePasswords()) {
+            e.preventDefault();
+        }
+    });
 </script>
 {% endblock %}
