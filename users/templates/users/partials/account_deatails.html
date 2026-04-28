@@ -1,0 +1,43 @@
+<div class="space-y-2">
+    <p class="text-sm text-stone font-medium">Адрес доставки</p>
+    <p class="text-sm text-stone">{{ user.first_name }} {{ user.last_name }}</p>
+    <p class="text-sm text-stone">{{ user.address1|default:"" }}{% if user.address2 %} {{ user.address2 }}{% endif %}</p>
+    <p class="text-sm text-stone">
+        {% if user.city %}{{ user.city }}{% endif %}{% if user.city and user.county %}, {% endif %}{{ user.country|default:"Не указана" }}
+        {% if user.postal_code %}, {{ user.postal_code }}{% endif %}
+    </p>
+    {% if user.phone %}
+        <p class="text-sm text-stone">Телефон: {{ user.phone }}</p>
+    {% endif %}
+    {% if user.company %}
+        <p class="text-sm text-stone">Компания: {{ user.company }}</p>
+    {% endif %}
+</div>
+<div class="mt-4 flex gap-3">
+    <button 
+        hx-get="{% url 'users:edit_account_details' %}" 
+        hx-target="#account-details-content" 
+        hx-swap="innerHTML"
+        class="btn-outline text-sm py-2 px-4"
+    >
+        Редактировать
+    </button>
+</div>
+
+<style>
+    .btn-outline {
+        border: 1.5px solid #D2BBA5;
+        background-color: transparent;
+        color: #8B7D6B;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+    }
+    .btn-outline:hover {
+        background-color: #D2BBA5;
+        color: white;
+        transform: translateY(-2px);
+    }
+</style>

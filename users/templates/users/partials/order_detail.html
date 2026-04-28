@@ -1,0 +1,98 @@
+<div class="bg-cream rounded-xl soft-border p-6">
+    <h2 class="font-serif text-xl text-potteryDark mb-4">
+        Заказ #{{ order.id }}
+    </h2>
+    <div class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+            <p class="text-sm text-stone"><span class="font-medium">Дата:</span> {{ order.created_at|date:"d F Y" }}</p>
+            <p class="text-sm text-stone"><span class="font-medium">Статус:</span> {{ order.get_status_display }}</p>
+            <p class="text-sm text-stone"><span class="font-medium">Способ оплаты:</span> {{ order.get_payment_provider_display }}</p>
+            <p class="text-sm font-medium text-potteryDark"><span class="font-medium text-stone">Итого:</span> {{ order.total_price }} ₽</p>
+        </div>
+        
+        <div class="border-t border-pottery/20 pt-4">
+            <h3 class="font-medium text-potteryDark mb-2">Адрес доставки</h3>
+            <p class="text-sm text-stone">
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {% if order.address1 %}{{ order.address1 }}{% endif %}{% if order.address2 %} {{ order.address2 }}{% endif %}<br>
+                {% if order.city %}{{ order.city }}{% endif %}{% if order.province %}, {{ order.province }}{% endif %}{% if order.postal_code %} {{ order.postal_code }}{% endif %}<br>
+                {{ order.country|default:"Не указана" }}
+            </p>
+            <p class="text-sm text-stone mt-2"><span class="font-medium">Телефон:</span> {{ order.phone|default:"Не указан" }}</p>
+            <p class="text-sm text-stone"><span class="font-medium">Email:</span> {{ order.email }}</p>
+        </div>
+        
+        <div class="border-t border-pottery/20 pt-4">
+            <h3 class="font-medium text-potteryDark mb-3">Товары</h3>
+            <div class="space-y-3">
+                {% for item in order.items.all %}
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-pottery/20 pb-3 last:border-0">
+                        <div>
+                            <p class="text-sm font-medium text-potteryDark">{{ item.product.name }}</p>
+                            <p class="text-xs text-stone">{{ item.size.size.get_attribute_type_display }}: {{ item.size.value }}</p>
+                            <p class="text-xs text-stone mt-1">Количество: {{ item.quantity }}</p>
+                        </div>
+                        <p class="text-sm font-medium text-potteryDark mt-2 sm:mt-0">{{ item.get_total_price }} ₽</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="border-t border-pottery/20 pt-4">
+            <div class="flex justify-between items-center">
+                <p class="text-base font-medium text-potteryDark">Общая сумма</p>
+                <p class="text-lg font-medium text-potteryDark">{{ order.total_price }} ₽</p>
+            </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-3 mt-4">
+            <button 
+                hx-get="{% url 'users:order_history' %}" 
+                hx-target="#profile-main-content" 
+                hx-push-url="true"
+                class="btn-outline text-sm py-2 px-5"
+            >
+                ← Назад к заказам
+            </button>
+            <a 
+                href="{% url 'products:index' %}" 
+                hx-get="{% url 'products:index' %}" 
+                hx-target="#main-content" 
+                hx-push-url="true"
+                class="btn-primary text-sm py-2 px-5 inline-block text-center"
+            >
+                Продолжить покупки
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .soft-border {
+        border: 1px solid rgba(210, 187, 165, 0.3);
+    }
+    .btn-primary {
+        background-color: #E07A5F;
+        color: white;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #C86A50;
+        transform: translateY(-2px);
+    }
+    .btn-outline {
+        border: 1.5px solid #D2BBA5;
+        background-color: transparent;
+        color: #8B7D6B;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+    }
+    .btn-outline:hover {
+        background-color: #D2BBA5;
+        color: white;
+        transform: translateY(-2px);
+    }
+</style>

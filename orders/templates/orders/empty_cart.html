@@ -1,0 +1,30 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div class="text-center py-12 lg:py-20">
+        <div class="w-20 h-20 mx-auto mb-6 bg-pottery/20 rounded-full flex items-center justify-center">
+            <svg class="w-10 h-10 text-pottery" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6m12 0l-1.5-6M9 21h6m-6 0a1.5 1.5 0 11-3 0m9 0a1.5 1.5 0 11-3 0"></path>
+            </svg>
+        </div>
+        <h3 class="font-serif text-2xl text-potteryDark mb-4">{{ message }}</h3>
+        <a href="{% url 'products:index' %}" 
+           hx-get="{% url 'products:index' %}" 
+           hx-target="#main-content" 
+           hx-push-url="true"
+           class="inline-block btn-primary py-3 px-6 text-sm font-medium">
+            Продолжить покупки
+        </a>
+    </div>
+</main>
+
+<style>
+    .btn-primary {
+        background-color: #E07A5F;
+        color: white;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #C86A50;
+        transform: translateY(-2px);
+    }
+</style>

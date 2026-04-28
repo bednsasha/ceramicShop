@@ -1,0 +1,33 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div class="text-center py-12 lg:py-20">
+        <!-- Cancel Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 bg-terracotta/10 rounded-full flex items-center justify-center">
+            <svg class="w-10 h-10 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </div>
+        
+        <h1 class="font-serif text-3xl lg:text-4xl text-potteryDark mb-4">Платеж отменен</h1>
+        <p class="text-stone text-lg mb-4">Ваш заказ #{{ order.id }} был отменен.</p>
+        <p class="text-stone mb-8">Вы можете повторить попытку оформления заказа.</p>
+        
+        <div class="space-y-4">
+            <a href="{% url 'cart:cart_summary' %}" 
+               hx-get="{% url 'cart:cart_summary' %}" 
+               hx-target="#main-content" 
+               hx-push-url="true"
+               class="inline-block btn-primary py-3 px-8 text-sm font-medium">
+                Вернуться в корзину
+            </a>
+            <div>
+                <a href="{% url 'products:index' %}" 
+                   hx-get="{% url 'products:index' %}" 
+                   hx-target="#main-content" 
+                   hx-push-url="true"
+                   class="text-sm text-stone hover:text-terracotta transition-colors">
+                    ← На главную
+                </a>
+            </div>
+        </div>
+    </div>
+</main>

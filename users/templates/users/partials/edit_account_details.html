@@ -1,0 +1,144 @@
+<form method="post" action="#" class="space-y-5" 
+      hx-post="{% url 'users:update_account_details' %}" 
+      hx-target="#account-details-content">
+    {% csrf_token %}
+    
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-stone mb-1">Имя</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="text-terracotta text-xs mt-1">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-stone mb-1">Фамилия</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="text-terracotta text-xs mt-1">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.email.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Компания</label>
+        {{ form.company }}
+        {% if form.company.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.company.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Адрес</label>
+        {{ form.address1 }}
+        {% if form.address1.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.address1.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Адрес (строка 2)</label>
+        {{ form.address2 }}
+        {% if form.address2.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.address2.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Город</label>
+        {{ form.city }}
+        {% if form.city.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.city.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Страна</label>
+        {{ form.country }}
+        {% if form.country.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.country.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Регион/Область</label>
+        {{ form.province }}
+        {% if form.province.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.province.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Почтовый индекс</label>
+        {{ form.postal_code }}
+        {% if form.postal_code.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.postal_code.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-sm font-medium text-stone mb-1">Телефон</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}
+            <div class="text-terracotta text-xs mt-1">{{ form.phone.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="flex gap-3 pt-2">
+        <button 
+            type="submit"
+            class="btn-primary py-2 px-5 text-sm font-medium"
+        >
+            Сохранить
+        </button>
+        <button 
+            type="button"
+            hx-get="{% url 'users:account_details' %}" 
+            hx-target="#account-details-content" 
+            class="btn-outline py-2 px-5 text-sm font-medium"
+        >
+            Отмена
+        </button>
+    </div>
+</form>
+
+<style>
+    .btn-primary {
+        background-color: #E07A5F;
+        color: white;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #C86A50;
+        transform: translateY(-2px);
+    }
+    .btn-outline {
+        border: 1.5px solid #D2BBA5;
+        background-color: transparent;
+        color: #8B7D6B;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+    }
+    .btn-outline:hover {
+        background-color: #D2BBA5;
+        color: white;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+        input.classList.add('w-full', 'border', 'border-pottery/30', 'rounded-lg', 'py-2.5', 'px-4', 'text-sm', 'text-stone', 'placeholder-stone/50', 'focus:outline-none', 'focus:border-terracotta', 'focus:ring-1', 'focus:ring-terracotta', 'transition-colors', 'bg-cream/50');
+    });
+</script>

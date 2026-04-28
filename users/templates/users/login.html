@@ -1,0 +1,68 @@
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+    <div class="bg-cream rounded-xl soft-border p-8 w-full max-w-md">
+        <h1 class="font-serif text-3xl text-potteryDark text-center mb-8 tracking-wide">
+            Вход в аккаунт
+        </h1>
+        
+        {% if messages %}
+            <div class="mb-4 space-y-2">
+                {% for message in messages %}
+                    <div class="text-terracotta text-sm text-center">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form id="loginForm" method="post" class="space-y-6" 
+              hx-post="{% url 'users:login' %}" 
+              hx-target="#main-content"
+              hx-push-url="true">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-sm font-medium text-stone mb-1">Email</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-terracotta text-xs mt-1">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-stone mb-1">Пароль</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="text-terracotta text-xs mt-1">{{ form.password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                <button 
+                    type="submit"
+                    class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide"
+                >
+                    Войти
+                </button>
+                <a 
+                    href="{% url 'users:register' %}"
+                    hx-get="{% url 'users:register' %}"
+                    hx-target="#main-content"
+                    hx-push-url="true"
+                    class="w-full btn-outline py-3 px-6 text-sm font-medium tracking-wide text-center"
+                >
+                    Создать аккаунт
+                </a>
+            </div>
+        </form>
+        
+        <div class="text-center mt-6">
+            <a href="{% url 'products:index' %}" 
+               hx-get="{% url 'products:index' %}"
+               hx-target="#main-content"
+               hx-push-url="true"
+               class="text-sm text-stone hover:text-terracotta transition-colors">
+                ← Вернуться на главную
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

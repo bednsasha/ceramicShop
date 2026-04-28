@@ -1,0 +1,33 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div class="text-center py-12 lg:py-20">
+        <!-- Success Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 bg-terracotta/10 rounded-full flex items-center justify-center">
+            <svg class="w-10 h-10 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        
+        <h1 class="font-serif text-3xl lg:text-4xl text-potteryDark mb-4">Спасибо за заказ!</h1>
+        <p class="text-stone text-lg mb-4">Ваш заказ #{{ order.id }} успешно оформлен.</p>
+        <p class="text-stone mb-8">Мы отправили подтверждение на <strong class="text-potteryDark">{{ order.email }}</strong></p>
+        
+        <div class="space-y-4">
+            <a href="{% url 'products:index' %}" 
+               hx-get="{% url 'products:index' %}" 
+               hx-target="#main-content" 
+               hx-push-url="true"
+               class="inline-block btn-primary py-3 px-8 text-sm font-medium">
+                Продолжить покупки
+            </a>
+            <div>
+                <a href="{% url 'users:order_detail' order.id %}" 
+                   hx-get="{% url 'users:order_detail' order.id %}" 
+                   hx-target="#main-content" 
+                   hx-push-url="true"
+                   class="text-sm text-stone hover:text-terracotta transition-colors">
+                    Посмотреть детали заказа →
+                </a>
+            </div>
+        </div>
+    </div>
+</main>

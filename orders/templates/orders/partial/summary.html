@@ -1,0 +1,25 @@
+<div class="space-y-3 border-t border-pottery/20 pt-4">
+    <div class="flex justify-between text-sm">
+        <span class="text-stone">Итого • {{ cart.total_items }} товар</span>
+        <span class="text-stone">{{ total_price }} ₽</span>
+    </div>
+    
+    <div class="flex justify-between text-sm">
+        <span class="text-stone">Доставка</span>
+        <span class="text-stone/50">Рассчитывается</span>
+    </div>
+    
+    {% if discount > 0 %}
+        <div class="flex justify-between text-sm">
+            <span class="text-stone">Скидка ({{ discount }}%)</span>
+            <span class="text-stone">-{{ discounted_price|default:"0" }} ₽</span>
+        </div>
+    {% endif %}
+    
+    <div class="flex justify-between text-lg font-medium pt-3 border-t border-pottery/20">
+        <span class="text-potteryDark">Итого</span>
+        <div class="text-right">
+            <span class="text-potteryDark">{{ total_price }} ₽</span>
+        </div>
+    </div>
+</div>

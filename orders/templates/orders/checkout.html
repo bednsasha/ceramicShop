@@ -1,0 +1,15 @@
+{% extends "products/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <style>
+        .input-checkout:focus { outline: none; border-color: #E07A5F; }
+        .select-checkout:focus { outline: none; border-color: #E07A5F; }
+    </style>
+{% endblock extra_css %}
+
+{% block content %}
+    <div id="main-content">
+        {% include "orders/checkout_content.html" %}
+    </div>
+{% endblock content %}

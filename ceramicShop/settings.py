@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'users',
+    'orders',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,12 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+# yookassa keys
+YOOKASSA_SHOP_ID = os.getenv('YOOKASSA_SHOP_ID')
+YOOKASSA_SECRET_KEY = os.getenv('YOOKASSA_SECRET_KEY')
+YOOKASSA_VAT_CODE = 1  # Код НДС (1 - без НДС)
+
+# init YooKassa
+from yookassa import Configuration
+Configuration.configure(YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY)

@@ -1,0 +1,275 @@
+{% load static %}
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Left Column - Checkout Form -->
+        <div class="space-y-6">
+            <!-- Breadcrumb -->
+            <div>
+                <nav class="flex items-center space-x-2 text-sm text-stone">
+                    <a href="{% url 'products:index' %}" 
+                       hx-get="{% url 'products:index' %}" 
+                       hx-target="#main-content" 
+                       hx-push-url="true"
+                       class="hover:text-terracotta transition-colors">Главная</a>
+                    <span class="mx-2 text-pottery">/</span>
+                    <span class="font-medium text-potteryDark">Оформление заказа</span>
+                </nav>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="bg-cream rounded-xl soft-border p-6">
+                <h2 class="font-serif text-xl text-potteryDark mb-4">Контактная информация</h2>
+                
+                <form method="post" id="order-form" hx-post="{% url 'orders:checkout' %}" hx-target="#main-content" hx-swap="outerHTML">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Email</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-terracotta text-sm mt-1">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="newsletter" class="h-4 w-4 text-terracotta border-pottery/30 rounded focus:ring-terracotta">
+                            <span class="text-sm text-stone">Получать новости и предложения</span>
+                        </label>
+                    </div>
+                
+                    <!-- Shipping Address -->
+                    <div class="mt-6 pt-6 border-t border-pottery/20">
+                        <h2 class="font-serif text-xl text-potteryDark mb-4">Адрес доставки</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Страна</label>
+                                {{ form.country }}
+                                {% if form.country.errors %}
+                                    <div class="text-terracotta text-sm mt-1">{{ form.country.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Имя</label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="text-terracotta text-sm mt-1">{{ form.first_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Фамилия</label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="text-terracotta text-sm mt-1">{{ form.last_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{ form.address1.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Адрес</label>
+                                {{ form.address1 }}
+                                {% if form.address1.errors %}
+                                    <div class="text-terracotta text-sm mt-1">{{ form.address1.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.address2.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Квартира/офис (необязательно)</label>
+                                {{ form.address2 }}
+                                {% if form.address2.errors %}
+                                    <div class="text-terracotta text-sm mt-1">{{ form.address2.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Город</label>
+                                    {{ form.city }}
+                                    {% if form.city.errors %}
+                                        <div class="text-terracotta text-sm mt-1">{{ form.city.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label for="{{ form.province.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Регион</label>
+                                    {{ form.province }}
+                                    {% if form.province.errors %}
+                                        <div class="text-terracotta text-sm mt-1">{{ form.province.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label for="{{ form.postal_code.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Индекс</label>
+                                    {{ form.postal_code }}
+                                    {% if form.postal_code.errors %}
+                                        <div class="text-terracotta text-sm mt-1">{{ form.postal_code.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Телефон</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-terracotta text-sm mt-1">{{ form.phone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.company.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Компания (необязательно)</label>
+                                {{ form.company }}
+                                {% if form.company.errors %}
+                                    <div class="text-terracotta text-sm mt-1">{{ form.company.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="save_info" class="h-4 w-4 text-terracotta border-pottery/30 rounded focus:ring-terracotta">
+                                    <span class="text-sm text-stone">Сохранить информацию на будущее</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Special Instructions -->
+                    <div class="mt-6 pt-6 border-t border-pottery/20">
+                        <label for="{{ form.special_instructions.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Комментарий к заказу (необязательно)</label>
+                        {{ form.special_instructions }}
+                    </div>
+                
+                    <!-- Payment Button -->
+                    <div class="mt-6">
+                        <input type="hidden" name="payment_provider" id="payment_provider" value="yookassa">
+                        <button type="submit" 
+                                name="create_order" 
+                                value="create_order" 
+                                class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide">
+                            Оплатить заказ
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Refund Policy -->
+                <div class="text-center mt-6">
+                    <a href="#" class="text-xs text-stone/60 hover:text-terracotta transition-colors underline">Политика возврата</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Order Summary -->
+        <div class="bg-cream rounded-xl soft-border p-6 h-fit sticky top-24">
+            <h2 class="font-serif text-xl text-potteryDark mb-4">Ваш заказ</h2>
+            
+            <!-- Cart Items -->
+            <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+                {% for item in cart_items %}
+                    <div class="flex items-center space-x-4 pb-4 border-b border-pottery/20 last:border-0">
+                        <div class="relative w-16 h-16 flex-shrink-0">
+                            {% if item.product.main_image %}
+                                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg soft-border">
+                            {% else %}
+                                <div class="w-full h-full bg-cream rounded-lg soft-border flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-pottery/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            {% endif %}
+                            <span class="absolute -top-2 -right-2 w-5 h-5 bg-terracotta text-white text-xs rounded-full flex items-center justify-center">{{ item.quantity }}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-medium text-sm text-potteryDark">{{ item.product.name }}</h3>
+                            <p class="text-xs text-stone">{{ item.product_size.size.get_attribute_type_display }}: {{ item.product_size.value }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-medium text-potteryDark">{{ item.product.price }} ₽</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Order Summary -->
+            <div id="order-summary" class="space-y-3 border-t border-pottery/20 pt-4">
+                <div class="flex justify-between text-sm">
+                    <span class="text-stone">Товаров • {{ cart.total_items }}</span>
+                    <span class="text-stone">{{ total_price }} ₽</span>
+                </div>
+                
+                <div class="flex justify-between text-sm">
+                    <span class="text-stone">Доставка</span>
+                    <span class="text-stone/50">Рассчитывается</span>
+                </div>
+                
+                <div class="flex justify-between text-lg font-medium pt-3 border-t border-pottery/20">
+                    <span class="text-potteryDark">Итого</span>
+                    <span class="text-potteryDark">{{ total_price }} ₽</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    /* Form input styles */
+    input, select, textarea {
+        width: 100%;
+        border: 1px solid rgba(210, 187, 165, 0.3);
+        border-radius: 0.5rem;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        color: #8B7D6B;
+        background-color: rgba(250, 247, 242, 0.5);
+        transition: all 0.3s ease;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #E07A5F;
+        ring: 1px solid #E07A5F;
+    }
+    
+    input::placeholder, textarea::placeholder {
+        color: rgba(139, 125, 107, 0.5);
+    }
+    
+    .soft-border {
+        border: 1px solid rgba(210, 187, 165, 0.3);
+    }
+    
+    .btn-primary {
+        background-color: #E07A5F;
+        color: white;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #C86A50;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('order-form');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Проверка обязательных полей
+                const requiredFields = ['email', 'first_name', 'last_name', 'address1', 'city', 'country', 'phone'];
+                let isValid = true;
+                let emptyFields = [];
+
+                requiredFields.forEach(fieldName => {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field && !field.value.trim()) {
+                        isValid = false;
+                        emptyFields.push(fieldName);
+                        field.classList.add('border-terracotta');
+                    } else if (field) {
+                        field.classList.remove('border-terracotta');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля');
+                    return false;
+                }
+            });
+        }
+    });
+</script>
