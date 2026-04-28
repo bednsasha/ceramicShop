@@ -7,14 +7,18 @@
 </div>
 
 <script>
-    // Update cart count
+    // Update cart count only if element exists
     const cartCountElement = document.getElementById('cart-count');
     if (cartCountElement) {
         cartCountElement.textContent = '0';
     }
-    updateHeaderCartCount(0);
     
-    // Hide cart summary
+    // Update header cart count if function exists
+    if (typeof updateHeaderCartCount === 'function') {
+        updateHeaderCartCount(0);
+    }
+    
+    // Hide cart summary if exists
     const cartSummary = document.getElementById('cart-summary');
     if (cartSummary) {
         cartSummary.style.display = 'none';

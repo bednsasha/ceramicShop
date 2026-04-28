@@ -369,46 +369,57 @@
                 closeMobileMenu();
             });
     
-            // Cart functionality
             function updateCartCountUI(totalItems) {
-                const desktopCountSpan = document.getElementById('cart-count-desktop');
-                const mobileCountSpan = document.getElementById('cart-count-mobile');
-                const mobileCartLink = document.getElementById('mobileCart');
-                
-                if (desktopCountSpan) desktopCountSpan.innerText = totalItems;
-                if (mobileCountSpan) mobileCountSpan.innerText = totalItems;
-                if (mobileCartLink) mobileCartLink.innerText = `CART (${totalItems})`;
-            }
-            
-            function updateCartCount() {
-                fetch('{% url "cart:cart_count" %}')
-                    .then(response => response.json())
-                    .then(data => {
-                        updateCartCountUI(data.total_items);
-                    })
-                    .catch(err => console.warn("Cart count fetch error", err));
-            }
+    const desktopCountSpan = document.getElementById('cart-count-desktop');
+    const mobileCountSpan = document.getElementById('cart-count-mobile');
+    const mobileCartLink = document.getElementById('mobileCart');
     
-            function openCart() {
-                htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
-                    target: '#cart-container',
-                    swap: 'innerHTML'
-                });
-            }
-            
+    if (desktopCountSpan) desktopCountSpan.innerText = totalItems;
+    if (mobileCountSpan) mobileCountSpan.innerText = totalItems;
+    if (mobileCartLink) mobileCartLink.innerText = `CART (${totalItems})`;
+}
+
+function updateCartCount() {
+    fetch('{% url "cart:cart_count" %}')
+        .then(response => response.json())
+        .then(data => {
+            updateCartCountUI(data.total_items);
+        })
+        .catch(err => console.warn("Cart count fetch error", err));
+}
+
+function openCart() {
+    console.log('openCart called');
+    const container = document.getElementById('cart-container');
+    if (container) {
+        // Очищаем контейнер перед загрузкой, чтобы избежать конфликтов
+        container.innerHTML = '<div class="htmx-indicator fixed top-0 left-0 w-full h-0.5 bg-[#C4A690] z-50"></div>';
+        htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
+            target: '#cart-container',
+            swap: 'innerHTML'
+        });
+    } else {
+        console.error('cart-container not found');
+    }
+}
             // Bind cart links
             const desktopCartLink = document.getElementById('desktopCart');
             const mobileCartLink = document.getElementById('mobileCart');
             const mobileCartHeaderLink = document.getElementById('mobileCartHeader');
             
             [desktopCartLink, mobileCartLink, mobileCartHeaderLink].forEach(link => {
-                if (link) {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        openCart();
-                    });
-                }
-            });
+    if (link) {
+        // Удаляем старые обработчики, чтобы не было дублирования
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        newLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Cart link clicked');
+            openCart();
+        });
+    }
+});
     
             // Resize handling
             window.addEventListener('resize', function() {

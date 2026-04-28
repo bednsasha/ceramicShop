@@ -1,21 +1,13 @@
-<div class="border-t border-pottery/20 pt-4">
-    <div class="flex justify-between text-sm mb-4">
-        <span class="text-stone">ИТОГО:</span>
-        <span class="font-medium text-potteryDark">{{ cart.subtotal }} ₽</span>
-    </div>
-    <div class="flex justify-between text-xs text-stone/70 mb-4">
-        <span>Товаров:</span>
-        <span>{{ cart.total_items }} шт.</span>
+<div class="border-t border-gray-200 pt-4">
+    <div class="flex justify-between text-sm font-medium mb-4">
+        <span>ИТОГО:</span>
+        <span>{{ cart.subtotal }} ₽</span>
     </div>
     <a href="{% url 'orders:checkout' %}" 
        hx-get="{% url 'orders:checkout' %}" 
        hx-target="#main-content" 
        hx-push-url="true"
-       class="w-full block btn-primary py-3 px-6 text-sm font-medium text-center">
+       class="w-full block bg-black text-white py-3 px-6 text-sm font-medium text-center uppercase hover:bg-gray-800 transition-colors">
         Оформить заказ
     </a>
-    <button onclick="closeCart()" 
-            class="w-full mt-2 text-center text-sm text-stone/60 hover:text-terracotta transition-colors">
-        Продолжить покупки
-    </button>
 </div>

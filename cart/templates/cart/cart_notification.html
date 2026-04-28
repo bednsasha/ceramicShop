@@ -1,24 +1,24 @@
-<div id="cart-notification" class="fixed top-20 right-4 bg-potteryDark text-white px-5 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+<div id="cart-notification" class="fixed top-20 right-4 bg-black text-white px-6 py-3 rounded shadow-lg z-50 transform translate-x-full transition-transform duration-300">
     <div class="flex items-center space-x-3">
-        <svg class="w-5 h-5 text-cream" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
-        <span class="text-sm font-medium">{{ message }}</span>
+        <span>{{ message }}</span>
     </div>
 </div>
 
 <script>
-    const notification = document.getElementById('cart-notification');
-    if (notification) {
+    setTimeout(() => {
+        const notification = document.getElementById('cart-notification');
+        if (notification) notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    setTimeout(() => {
+        const notification = document.getElementById('cart-notification');
+        if (notification) notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 10);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
+            const notification = document.getElementById('cart-notification');
+            if (notification) notification.remove();
+        }, 300);
+    }, 3000);
 </script>
