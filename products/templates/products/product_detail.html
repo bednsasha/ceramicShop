@@ -1,52 +1,48 @@
-{% block content %}
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+<main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
-    <div class="mb-8 lg:mb-12">
-        <nav class="text-sm text-stone">
+    <div class="mb-8">
+        <nav class="text-sm text-[#7A685A]">
             <a href="{% url 'products:index' %}" 
                hx-get="{% url 'products:index' %}" 
                hx-target="#main-content" 
                hx-push-url="true"
-               class="hover:text-terracotta transition-colors">Главная</a>
-            <span class="mx-2 text-pottery">/</span>
+               class="hover:text-[#C4A690] transition-colors">HOME</a>
+            <span class="mx-2">/</span>
             <a href="{% url 'products:catalog' product.category.slug %}" 
                hx-get="{% url 'products:catalog' product.category.slug %}" 
                hx-target="#main-content" 
                hx-push-url="true"
-               class="hover:text-terracotta transition-colors">{{ product.category.name }}</a>
-            <span class="mx-2 text-pottery">/</span>
-            <span class="text-potteryDark font-medium">{{ product.name }}</span>
+               class="hover:text-[#C4A690] transition-colors">{{ product.category.name|upper }}</a>
+            <span class="mx-2">/</span>
+            <span class="text-[#4A3B32] font-medium">{{ product.name|upper }}</span>
         </nav>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <!-- Product Images -->
         <div class="space-y-4">
             <!-- Main Image -->
-            <div class="aspect-square overflow-hidden bg-cream soft-border rounded-lg">
+            <div class="aspect-square overflow-hidden bg-[#F4E9DD] rounded-sm">
                 {% if product.main_image %}
                     <img src="{{ product.main_image.url }}" 
                          alt="{{ product.name }}" 
-                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                         id="mainImage">
+                         class="w-full h-full object-cover">
                 {% else %}
-                    <div class="w-full h-full bg-cream flex items-center justify-center">
-                        <svg class="w-20 h-20 text-pottery/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
+                    <div class="w-full h-full bg-[#E8E2D9] flex items-center justify-center">
+                        <span class="text-[#A28F7D] text-sm">No Image</span>
                     </div>
                 {% endif %}
             </div>
 
-            <!-- Additional Images Thumbnails -->
+            <!-- Additional Images -->
             {% if product.images.all %}
-            <div class="grid grid-cols-4 gap-3">
+            <div class="grid grid-cols-4 gap-2">
                 {% for image in product.images.all %}
-                <div class="aspect-square overflow-hidden bg-cream soft-border rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
-                     onclick="changeMainImage(this.querySelector('img').src)">
+                <div class="aspect-square overflow-hidden bg-[#F4E9DD] cursor-pointer hover:opacity-80 transition-opacity">
                     <img src="{{ image.image.url }}" 
                          alt="{{ product.name }}" 
-                         class="w-full h-full object-cover">
+                         class="w-full h-full object-cover"
+                         onclick="changeMainImage(this.src)">
                 </div>
                 {% endfor %}
             </div>
@@ -56,158 +52,138 @@
         <!-- Product Info -->
         <div class="space-y-6">
             <div>
-                <h1 class="font-serif text-3xl lg:text-4xl text-potteryDark mb-2">
-                    {{ product.name }}
+                <h1 class="text-2xl sm:text-3xl font-light tracking-tight text-[#4A3B32] mb-2">
+                    {{ product.name|title }}
                 </h1>
                 {% if product.color %}
-                <p class="text-stone text-sm uppercase tracking-wide mb-3">{{ product.color }}</p>
+                <p class="text-sm text-[#A28F7D] mb-3">{{ product.color|title }}</p>
                 {% endif %}
-                <p class="text-2xl lg:text-3xl font-medium text-potteryDark">{{ product.price }} ₽</p>
+                {% if product.glaze_type and product.glaze_type != 'none' %}
+                <span class="inline-block bg-[#E8E2D9] text-[#4A3B32] text-xs px-3 py-1 rounded-full tracking-wide mb-4">
+                    {{ product.get_glaze_type_display }}
+                </span>
+                {% endif %}
+                <p class="text-2xl font-medium text-[#4A3B32] mt-2">${{ product.price }}</p>
             </div>
 
-            <!-- Product Description Preview -->
-            {% if product.description %}
-            <div class="border-t border-pottery/20 pt-4">
-                <p class="text-stone leading-relaxed text-sm">
-                    {{ product.description|truncatewords:30 }}
-                </p>
-            </div>
-            {% endif %}
-
-            <!-- Sizes Section -->
-            {% with sizes=product.product_sizes.all %}
-            {% if sizes %}
-            <div class="space-y-3">
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase">Выберите размер</h3>
-                <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                    {% for product_size in sizes %}
+            <!-- Product Sizes (from ProductSize model) -->
+            {% if product.product_sizes.all %}
+            <div>
+                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Size</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for product_size in product.product_sizes.all %}
                     <div class="size-option">
                         <input type="radio" 
                                name="size" 
                                class="size-radio hidden"
                                id="size-{{ product_size.id }}"
                                value="{{ product_size.id }}"
-                               data-size-id="{{ product_size.size.id }}"
-                               data-size-type="{{ product_size.size.attribute_type }}"
-                               data-size-value="{{ product_size.value }}"
+                               data-value="{{ product_size.value }}"
+                               data-type="{{ product_size.size.attribute_type }}"
                                data-stock="{{ product_size.stock }}"
                                {% if product_size.stock == 0 %}disabled{% endif %}
                                {% if forloop.first and product_size.stock > 0 %}checked{% endif %}>
                         <label for="size-{{ product_size.id }}"
-                               class="block border border-pottery/30 rounded-lg py-2.5 px-2 text-sm font-medium text-center cursor-pointer transition-all hover:border-terracotta hover:text-terracotta {% if product_size.stock == 0 %}opacity-40 cursor-not-allowed bg-pottery/5{% endif %}">
-                            {{ product_size.size.get_attribute_type_display }}: {{ product_size.value }}
-                            {% if product_size.stock == 0 %}
-                            <span class="block text-[10px] text-stone/50">Нет в наличии</span>
+                               class="inline-block border border-[#E8E2D9] py-2 px-3 text-sm font-medium text-center cursor-pointer hover:border-[#C4A690] transition-all {% if product_size.stock == 0 %}opacity-40 cursor-not-allowed bg-[#F4E9DD]{% endif %}">
+                            {{ product_size.value|floatformat:"0" }}
+                            {% if product_size.size.attribute_type == 'volume' %}ml
+                            {% elif product_size.size.attribute_type == 'diameter' %}cm Ø
+                            {% elif product_size.size.attribute_type == 'height' %}cm H
+                            {% elif product_size.size.attribute_type == 'width' %}cm W
+                            {% elif product_size.size.attribute_type == 'depth' %}cm D
+                            {% elif product_size.size.attribute_type == 'length' %}cm L
                             {% endif %}
                         </label>
                     </div>
                     {% endfor %}
                 </div>
+                {% for product_size in product.product_sizes.all %}
+                    {% if forloop.first and product_size.size.attribute_type %}
+                    <p class="text-xs text-[#7A685A] mt-2">
+                        {% if product_size.size.attribute_type == 'volume' %}Capacity in milliliters
+                        {% elif product_size.size.attribute_type == 'diameter' %}Diameter in centimeters
+                        {% elif product_size.size.attribute_type == 'height' %}Height in centimeters
+                        {% elif product_size.size.attribute_type == 'width' %}Width in centimeters
+                        {% elif product_size.size.attribute_type == 'depth' %}Depth in centimeters
+                        {% elif product_size.size.attribute_type == 'length' %}Length in centimeters
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                {% endfor %}
             </div>
             {% else %}
-            <div class="space-y-3">
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase">Размеры</h3>
-                <p class="text-sm text-stone">Размеры не указаны</p>
-            </div>
-            {% endif %}
-            {% endwith %}
-
-            <!-- Glaze Type (если есть) -->
-            {% if product.glaze_type and product.glaze_type != 'none' %}
-            <div class="space-y-2">
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase">Тип глазури</h3>
-                <p class="text-stone text-sm">{{ product.get_glaze_type_display }}</p>
+            <div>
+                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Size</h3>
+                <p class="text-sm text-[#A28F7D]">Standard size</p>
             </div>
             {% endif %}
 
-            <!-- Add to Cart Buttons -->
-            <div class="space-y-3 pt-4">
+            <!-- Add to Cart -->
+            <div class="space-y-3 pt-2">
                 <button id="add-to-cart-btn" 
-                        class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide"
+                        class="w-full bg-[#4A3B32] text-white py-3 px-6 text-sm font-medium uppercase tracking-wide hover:bg-[#C4A690] transition-colors duration-200"
                         onclick="addToCart()"
-                        {% if not sizes or sizes|length == 0 %}disabled{% endif %}>
-                    {% if sizes %}
-                        В корзину
-                    {% else %}
-                        Нет доступных размеров
-                    {% endif %}
+                        {% if not product.product_sizes.all %}disabled{% endif %}>
+                    Add to Cart
                 </button>
                 
-                <button class="w-full btn-outline py-3 px-6 text-sm font-medium flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                    В избранное
+                <button class="w-full border border-[#E8E2D9] bg-white py-3 px-6 text-sm font-medium text-[#4A3B32] uppercase tracking-wide hover:border-[#C4A690] hover:text-[#C4A690] transition-colors">
+                    Add to Wishlist
                 </button>
             </div>
 
-            <!-- Full Description -->
-            <div class="border-t border-pottery/20 pt-6 space-y-4">
-                <div>
-                    <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Описание</h3>
-                    <div class="text-stone text-sm leading-relaxed space-y-2">
-                        {{ product.description|linebreaks|default:"Описание отсутствует" }}
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Детали</h3>
-                    <ul class="text-stone text-sm space-y-1">
-                        <li>📅 Создан: {{ product.created_at|date:"d F Y" }}</li>
-                        {% if product.updated_at != product.created_at %}
-                        <li>🔄 Обновлен: {{ product.updated_at|date:"d F Y" }}</li>
-                        {% endif %}
-                        {% if product.category %}
-                        <li>🏷️ Категория: {{ product.category.name }}</li>
-                        {% endif %}
-                    </ul>
+            <!-- Product Description -->
+            <div class="border-t border-[#E8E2D9] pt-6">
+                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Description</h3>
+                <div class="text-sm text-[#5A4A3E] leading-relaxed">
+                    {% if product.description %}
+                        <p>{{ product.description|linebreaksbr }}</p>
+                    {% else %}
+                        <p class="text-[#A28F7D]">Handcrafted ceramic piece made with care.</p>
+                    {% endif %}
+                    <p class="text-xs text-[#A28F7D] mt-3">Created: {{ product.created_at|date:"F d, Y" }}</p>
                 </div>
             </div>
 
-            <!-- Care Instructions -->
-            <div class="border-t border-pottery/20 pt-6">
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Уход за изделием</h3>
-                <div class="text-stone text-sm space-y-1">
-                    <p>🧼 Ручная мойка рекомендуется</p>
-                    <p>🚫 Не использовать в посудомоечной машине</p>
-                    <p>🌡️ Избегать резких перепадов температур</p>
-                    <p>✨ Мягкая губка для очистки</p>
+            <!-- Care Information -->
+            <div class="border-t border-[#E8E2D9] pt-6">
+                <h3 class="text-xs font-medium uppercase tracking-wider text-[#7A685A] mb-3">Care</h3>
+                <div class="text-sm text-[#5A4A3E]">
+                    <p>Dishwasher and microwave safe<br>
+                    Hand wash recommended for reactive glaze pieces<br>
+                    Avoid sudden temperature changes</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Related product -->
-    {% if related_product %}
-    <div class="mt-16 lg:mt-20 pt-8 border-t border-pottery/20">
-        <h2 class="font-serif text-2xl text-potteryDark mb-8 text-center">Вам также может понравиться</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {% for related_product in related_product %}
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="mt-16 border-t border-[#E8E2D9] pt-12">
+        <h2 class="text-lg font-light tracking-wide text-[#4A3B32] mb-8 text-center sm:text-left">You may also like</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for related_product in related_products %}
             <div class="product-card group cursor-pointer" 
                  hx-get="{% url 'products:product_detail' related_product.slug %}"
                  hx-target="#main-content"
                  hx-push-url="true">
-                <div class="aspect-square overflow-hidden bg-cream soft-border rounded-lg mb-4">
+                <div class="aspect-square overflow-hidden bg-[#F4E9DD] mb-4">
                     {% if related_product.main_image %}
                         <img src="{{ related_product.main_image.url }}" 
                              alt="{{ related_product.name }}" 
-                             class="product-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                             class="product-image w-full h-full object-cover">
                     {% else %}
-                        <div class="w-full h-full bg-cream flex items-center justify-center">
-                            <svg class="w-10 h-10 text-pottery/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
+                        <div class="product-image w-full h-full bg-[#E8E2D9] flex items-center justify-center">
+                            <span class="text-[#A28F7D] text-xs">No Image</span>
                         </div>
                     {% endif %}
                 </div>
                 <div class="text-center">
-                    <h3 class="font-serif text-base text-potteryDark group-hover:text-terracotta transition-colors mb-1">
-                        {{ related_product.name }}
-                    </h3>
+                    <h3 class="text-sm font-medium text-[#4A3B32] mb-1">{{ related_product.name|title }}</h3>
                     {% if related_product.color %}
-                    <p class="text-xs text-stone/70 mb-1">{{ related_product.color }}</p>
+                    <p class="text-xs text-[#A28F7D] mb-1">{{ related_product.color|title }}</p>
                     {% endif %}
-                    <p class="text-base font-medium text-potteryDark">{{ related_product.price }} ₽</p>
+                    <p class="text-sm font-medium text-[#4A3B32]">${{ related_product.price }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -217,139 +193,79 @@
 </main>
 
 <style>
-    /* Size radio button styling */
     .size-radio:checked + label {
-        background-color: #E07A5F !important;
+        background-color: #4A3B32 !important;
         color: white !important;
-        border-color: #E07A5F !important;
+        border-color: #4A3B32 !important;
     }
-    
-    .size-option label {
-        transition: all 0.2s ease;
-    }
-    
     .size-radio:disabled + label {
         opacity: 0.5;
         cursor: not-allowed;
-        background-color: #F5F0E8;
+        text-decoration: line-through;
     }
-    
-    /* Notification animation */
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+    .product-card {
+        transition: transform 0.25s ease;
     }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .notification-slide-in {
-        animation: slideIn 0.3s ease forwards;
-    }
-    
-    .notification-slide-out {
-        animation: slideOut 0.3s ease forwards;
+    .product-card:hover {
+        transform: translateY(-3px);
     }
 </style>
 
 <script>
-    let selectedSizeId = null;
-    let selectedSizeValue = null;
-    let selectedSizeType = null;
-    let selectedStock = null;
+    let selectedProductSizeId = null;
 
     function changeMainImage(src) {
-        const mainImg = document.getElementById('mainImage');
+        const mainImg = document.querySelector('.aspect-square img');
         if (mainImg) {
+            mainImg.style.opacity = '0.5';
             mainImg.src = src;
+            setTimeout(() => {
+                mainImg.style.opacity = '1';
+            }, 100);
         }
     }
 
     function updateSelectedSize() {
         const sizeRadios = document.querySelectorAll('.size-radio');
         const checkedRadio = Array.from(sizeRadios).find(radio => radio.checked && !radio.disabled);
-        
         if (checkedRadio) {
-            selectedSizeId = checkedRadio.value;
-            selectedSizeType = checkedRadio.dataset.sizeType;
-            selectedSizeValue = checkedRadio.dataset.sizeValue;
-            selectedStock = parseInt(checkedRadio.dataset.stock);
-            
-            console.log('Selected Size:', {
-                id: selectedSizeId,
-                type: selectedSizeType,
-                value: selectedSizeValue,
-                stock: selectedStock
-            });
+            selectedProductSizeId = checkedRadio.value;
+            console.log('Selected ProductSize ID:', selectedProductSizeId);
         } else {
-            selectedSizeId = null;
-            selectedSizeValue = null;
-            selectedSizeType = null;
-            selectedStock = null;
-            console.log('No valid size selected');
+            selectedProductSizeId = null;
         }
     }
 
     function addToCart() {
-        const productlug = '{{ product.slug }}';
+        const productSlug = '{{ product.slug }}';
         
-        // Update selected size before sending
         updateSelectedSize();
-        
-        if (!selectedSizeId) {
-            showNotification('Пожалуйста, выберите размер', 'error');
-            return;
-        }
-        
-        if (selectedStock === 0) {
-            showNotification('Этот размер временно отсутствует', 'error');
-            return;
-        }
 
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        const originalText = addToCartBtn.innerHTML;
-        addToCartBtn.innerHTML = 'Добавление...';
-        addToCartBtn.disabled = true;
+        if (!selectedProductSizeId) {
+            showNotification('Please select a size', 'info');
+            return;
+        }
 
         let formData = new FormData();
-        formData.append('size_id', selectedSizeId);
+        formData.append('size_id', selectedProductSizeId);
         formData.append('quantity', '1');
         
-        fetch(`{% url 'cart:add_to_cart' product.slug %}`, {
+        fetch(`{% url 'cart:add_to_cart' 'PLACEHOLDER' %}`.replace('PLACEHOLDER', productSlug), {
             method: 'POST',
             body: formData,
             headers: {
                 'X-CSRFToken': getCookie('csrftoken')
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.error) {
                 showNotification(data.error, 'error');
             } else {
-                updateHeaderCartCount(data.total_items);
-                showNotification(data.message || 'Товар добавлен в корзину!', 'success');
-                
-                // Update cart modal if open
+                if (window.updateHeaderCartCount) {
+                    window.updateHeaderCartCount(data.total_items);
+                }
+                showNotification('Added to cart ✓', 'success');
                 htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
                     target: '#cart-container',
                     swap: 'innerHTML'
@@ -358,11 +274,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            showNotification('Ошибка при добавлении в корзину', 'error');
-        })
-        .finally(() => {
-            addToCartBtn.innerHTML = originalText;
-            addToCartBtn.disabled = false;
+            showNotification('Error adding to cart', 'error');
         });
     }
     
@@ -381,97 +293,66 @@
         return cookieValue;
     }
     
-    function showNotification(message, type = 'success') {
+    function showNotification(message, type = 'info') {
+        const bgColor = type === 'success' ? '#4A3B32' : (type === 'error' ? '#C4A690' : '#7A685A');
         const notification = document.createElement('div');
-        const bgColor = type === 'error' ? '#E07A5F' : '#8B7D6B';
-        notification.className = 'fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm';
+        notification.className = 'fixed top-20 right-4 px-5 py-3 rounded-sm shadow-md z-50 transform translate-x-full transition-transform duration-300 text-white text-sm';
         notification.style.backgroundColor = bgColor;
-        notification.style.animation = 'slideIn 0.3s ease forwards';
         notification.textContent = message;
-        
         document.body.appendChild(notification);
-        
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease forwards';
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
             setTimeout(() => {
                 notification.remove();
             }, 300);
-        }, 3000);
+        }, 2500);
     }
 
     function initializeSizeRadios() {
         const sizeRadios = document.querySelectorAll('.size-radio');
         const addToCartBtn = document.getElementById('add-to-cart-btn');
-        
-        console.log('Size Radios Found:', sizeRadios.length);
-        
+
         if (sizeRadios.length === 0) {
-            if (addToCartBtn) {
-                addToCartBtn.disabled = true;
-                addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
+            if (addToCartBtn) addToCartBtn.disabled = false;
             return;
         }
-        
+
         const availableRadios = Array.from(sizeRadios).filter(radio => !radio.disabled);
-        
+
         if (availableRadios.length === 0) {
             if (addToCartBtn) {
                 addToCartBtn.disabled = true;
                 addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                addToCartBtn.innerHTML = 'Нет в наличии';
             }
             return;
         }
-        
-        // Ensure at least one valid radio is checked
+
         let checkedRadio = Array.from(sizeRadios).find(radio => radio.checked && !radio.disabled);
         if (!checkedRadio && availableRadios.length > 0) {
             availableRadios[0].checked = true;
-            checkedRadio = availableRadios[0];
         }
-        
-        // Update selected size
+
         updateSelectedSize();
-        
-        // Add event listeners
+
         sizeRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.disabled) return;
-                updateSelectedSize();
-                if (addToCartBtn) {
-                    addToCartBtn.disabled = false;
-                    addToCartBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    addToCartBtn.innerHTML = 'В корзину';
-                }
-            });
+            radio.removeEventListener('change', handleSizeChange);
+            radio.addEventListener('change', handleSizeChange);
         });
     }
     
-    // Product card hover effects
-    function initializeProductCards() {
-        const productCards = document.querySelectorAll('.product-card');
-        productCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-4px)';
-                this.style.transition = 'transform 0.3s ease';
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
+    function handleSizeChange() {
+        if (this.disabled) return;
+        updateSelectedSize();
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        if (addToCartBtn) {
+            addToCartBtn.disabled = false;
+            addToCartBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
     }
-    
-    // Initialize everything
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeSizeRadios();
-        initializeProductCards();
-    });
-    
-    // Reinitialize after HTMX swaps
-    document.addEventListener('htmx:afterSwap', function() {
-        initializeSizeRadios();
-        initializeProductCards();
-    });
+
+    document.addEventListener('DOMContentLoaded', initializeSizeRadios);
+    document.addEventListener('htmx:afterSwap', initializeSizeRadios);
 </script>
-{% endblock %}

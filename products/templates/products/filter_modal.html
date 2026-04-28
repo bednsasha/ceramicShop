@@ -1,8 +1,7 @@
-{% load static %}
-<div class="p-6 lg:p-8">
-    <div class="flex justify-between items-center mb-6 pb-3 border-b border-pottery/20">
-        <h2 class="font-serif text-xl text-potteryDark tracking-wide">Фильтры</h2>
-        <button class="text-stone hover:text-terracotta transition-colors text-2xl leading-none"
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold tracking-tight text-gray-900 uppercase">Фильтры</h2>
+        <button class="text-gray-600 hover:text-gray-900"
                 onclick="document.getElementById('filter-modal').classList.add('hidden')">
             ×
         </button>
@@ -10,193 +9,90 @@
 
     <form hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}" 
           hx-target="#main-content" 
-          hx-push-url="true"
-          hx-indicator="#filter-indicator">
-        
-        <!-- Сохраняем поисковый запрос -->
+          hx-push-url="true">
         <input type="hidden" name="q" value="{{ filter_params.q|default:'' }}">
         
         <div class="space-y-6">
-            <!-- Color Filter -->
+            <!-- Color -->
             <div>
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Цвет</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">Цвет</h3>
                 <input type="text" 
                        name="color" 
                        value="{{ filter_params.color|default:'' }}" 
-                       class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
+                       class="w-full border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
             </div>
 
             <!-- Price Range -->
             <div>
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Цена (₽)</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">Цена</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs text-stone/70 mb-1 block">от</label>
-                        <input type="number" 
-                               name="min_price" 
-                               value="{{ filter_params.min_price|default:'' }}" 
-                               placeholder="0" 
-                               min="0"
-                               step="100"
-                               class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
-                    </div>
-                    <div>
-                        <label class="text-xs text-stone/70 mb-1 block">до</label>
-                        <input type="number" 
-                               name="max_price" 
-                               value="{{ filter_params.max_price|default:'' }}" 
-                               placeholder="∞" 
-                               min="0"
-                               step="100"
-                               class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
-                    </div>
+                    <input type="number" 
+                           name="min_price" 
+                           value="{{ filter_params.min_price|default:'' }}" 
+                           placeholder="Min" 
+                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                    <input type="number" 
+                           name="max_price" 
+                           value="{{ filter_params.max_price|default:'' }}" 
+                           placeholder="Max" 
+                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
                 </div>
             </div>
 
-            <!-- Size Filter -->
-            {% if sizes %}
+            <!-- Size -->
             <div>
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Размер</h3>
-                <div class="space-y-2">
-                    <!-- Size Type Selection -->
-                    <select name="size_type" 
-                            class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
-                        <option value="">Любой тип размера</option>
-                        {% for size in sizes %}
-                        <option value="{{ size.attribute_type }}" {% if filter_params.size_type == size.attribute_type %}selected{% endif %}>
-                            {{ size.get_attribute_type_display }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                    
-                    <!-- Min/Max Values -->
-                    <div class="grid grid-cols-2 gap-4 mt-3">
-                        <div>
-                            <label class="text-xs text-stone/70 mb-1 block">Значение от</label>
-                            <input type="number" 
-                                   name="min_size" 
-                                   value="{{ filter_params.min_size|default:'' }}" 
-                                   step="10"
-                                   class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
-                        </div>
-                        <div>
-                            <label class="text-xs text-stone/70 mb-1 block">Значение до</label>
-                            <input type="number" 
-                                   name="max_size" 
-                                   value="{{ filter_params.max_size|default:'' }}" 
-                                   placeholder="Например: 500"
-                                   step="10"
-                                   class="w-full border border-pottery/30 rounded-lg py-2.5 px-4 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-colors bg-cream/50">
-                        </div>
-                    </div>
-                    <p class="text-xs text-stone/50 mt-2">
-                        * Единицы измерения зависят от типа размера (мл, см и т.д.)
-                    </p>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">Размер</h3>
+                <select name="size_type" class="w-full border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                    <option value="">Любой размер</option>
+                    {% for size in sizes %}
+                    <option value="{{ size.attribute_type }}" {% if filter_params.size_type == size.attribute_type %}selected{% endif %}>
+                        {{ size.get_attribute_type_display }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="grid grid-cols-2 gap-4 mt-3">
+                    <input type="number" 
+                           name="min_size" 
+                           value="{{ filter_params.min_size|default:'' }}" 
+                           placeholder="от"
+                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                    <input type="number" 
+                           name="max_size" 
+                           value="{{ filter_params.max_size|default:'' }}" 
+                           placeholder="до"
+                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
                 </div>
             </div>
-            {% endif %}
 
-            <!-- Glaze Type Filter -->
+            <!-- Glaze Type -->
             <div>
-                <h3 class="text-sm font-medium text-potteryDark tracking-wide uppercase mb-3">Тип глазури</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">Тип глазури</h3>
                 <div class="space-y-2">
-                    {% for glaze_value, glaze_label in glaze_choices %}
-                    <label class="flex items-center cursor-pointer group">
-                        <input type="radio" 
-                               name="glaze_type" 
-                               value="{{ glaze_value }}"
-                               {% if filter_params.glaze_type == glaze_value %}checked{% endif %}
-                               class="w-4 h-4 text-terracotta border-pottery/30 focus:ring-terracotta focus:ring-offset-0 bg-cream/50">
-                        <span class="ml-3 text-sm text-stone group-hover:text-terracotta transition-colors">
-                            {{ glaze_label }}
-                        </span>
+                    <label class="flex items-center">
+                        <input type="radio" name="glaze_type" value="" {% if not filter_params.glaze_type %}checked{% endif %} class="mr-2">
+                        <span class="text-sm uppercase">Любая</span>
+                    </label>
+                    {% for value, label in product.GLAZE_CHOICES %}
+                    <label class="flex items-center">
+                        <input type="radio" name="glaze_type" value="{{ value }}" {% if filter_params.glaze_type == value %}checked{% endif %} class="mr-2">
+                        <span class="text-sm uppercase">{{ label }}</span>
                     </label>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Form Actions -->
-            <div class="flex gap-3 pt-4 border-t border-pottery/20">
+            <div class="flex justify-between">
                 <button type="button" 
-                        class="flex-1 btn-outline py-2.5 px-4 text-sm font-medium rounded-lg"
+                        class="border border-gray-300 py-2 px-4 text-sm font-medium uppercase hover:border-gray-900 transition-colors"
                         onclick="document.getElementById('filter-modal').classList.add('hidden')">
                     Отмена
                 </button>
                 <button type="submit" 
-                        class="flex-1 btn-primary py-2.5 px-4 text-sm font-medium rounded-lg flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                    </svg>
-                    Применить
+                        class="bg-black text-white py-2 px-4 text-sm font-medium uppercase hover:bg-gray-800 transition-colors">
+                    Применить фильтры
                 </button>
             </div>
         </div>
     </form>
-    
-    <!-- Loading Indicator -->
-    <div id="filter-indicator" class="htmx-indicator fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-        <div class="bg-cream rounded-lg p-4 shadow-lg">
-            <div class="loading-bar w-48"></div>
-            <p class="text-sm text-stone mt-2">Загрузка...</p>
-        </div>
-    </div>
 </div>
-
-<style>
-    /* Loading indicator styles */
-    .loading-bar {
-        height: 2px;
-        background: linear-gradient(90deg, #E07A5F 0%, #D2BBA5 50%, #E07A5F 100%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 2px;
-    }
-    
-    @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-    }
-    
-    /* Input number spinners hide */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        opacity: 0.5;
-    }
-    
-    /* Radio button custom style */
-    input[type="radio"]:checked {
-        background-color: #E07A5F;
-        border-color: #E07A5F;
-    }
-</style>
-
-<script>
-    // Close modal on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const modal = document.getElementById('filter-modal');
-            if (modal && !modal.classList.contains('hidden')) {
-                modal.classList.add('hidden');
-            }
-        }
-    });
-    
-    // Close modal when clicking outside
-    const modal = document.getElementById('filter-modal');
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
-        });
-    }
-    
-    // Auto-submit form when selecting radio (опционально)
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked && this.name === 'glaze_type') {
-                this.closest('form').dispatchEvent(new Event('submit', {bubbles: true}));
-            }
-        });
-    });
-</script>

@@ -1,137 +1,107 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Керамическая мастерская{% endblock %}</title>
-    
-    <!-- TailwindCSS -->
+    <title>{% block title %}CERAMIC STUDIO{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Tailwind Custom Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        clay: '#F5F0E8',      // теплый кремовый фон
-                        claydark: '#E8E0D5',   // чуть темнее для градиентов или теней
-                        pottery: '#D2BBA5',    // цвет глины
-                        potteryDark: '#B89A7A', // насыщенная керамика
-                        sage: '#C2D5C0',       // мягкий шалфей для акцентов
-                        terracotta: '#E07A5F', // терракотовый для кнопок
-                        cream: '#FAF7F2',      // сливочный
-                        stone: '#8B7D6B',      // каменный для текста
-                        // добавим оттенки
-                        rose: '#E8D1C5',
-                        olive: '#B5C1A4',
-                    },
-                    fontFamily: {
-                        'serif': ['Cormorant Garamond', 'Georgia', 'serif'],
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- HTMX & Alpine.js -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    
     <style>
-        /* Custom styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         body {
-            background-color: #F5F0E8;
-            color: #3D3527;
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7; /* Soft warm off-white base */
         }
         
-        /* Smooth transitions */
-        * {
-            transition: all 0.2s ease;
-        }
-        
-        /* Product card hover effect */
-        .product-card {
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        
-        .product-card:hover {
-            transform: translateY(-8px);
+        /* Pastel color palette */
+        :root {
+            --clay: #F4E9DD;
+            --sage: #D9E0D2;
+            --terracotta: #E3C9B7;
+            --dusty-pink: #EFD6D1;
+            --warm-gray: #E8E2D9;
+            --deep-clay: #C4A690;
+            --text-dark: #4A3B32;
+            --text-soft: #7A685A;
         }
         
         .product-image {
-            transition: transform 0.6s ease;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .product-card:hover .product-image {
             transform: scale(1.03);
         }
         
-        /* Navigation links */
         .nav-link {
             position: relative;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-weight: 500;
+            letter-spacing: 0.02em;
         }
         
-        .nav-link::after {
+        .nav-link:hover::after {
             content: '';
             position: absolute;
             bottom: -4px;
             left: 0;
-            width: 0;
-            height: 1.5px;
-            background-color: #E07A5F;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after,
-        .nav-link.active::after {
             width: 100%;
+            height: 1.5px;
+            background-color: var(--deep-clay);
+            border-radius: 2px;
         }
-        
-        /* Subtle border for containers */
-        .soft-border {
-            border: 1px solid rgba(210, 187, 165, 0.3);
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--deep-clay);
         }
-        
-        /* Button styles */
-        .btn-primary {
-            background-color: #E07A5F;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 9999px;
+
+        /* Category card hover effect */
+        .category-card {
             transition: all 0.3s ease;
+            background-color: white;
+            border: 1px solid var(--warm-gray);
         }
-        
-        .btn-primary:hover {
-            background-color: #C86A50;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
+        .category-card:hover {
+            background-color: var(--clay);
+            border-color: var(--deep-clay);
+            transform: translateY(-3px);
         }
-        
-        .btn-outline {
-            border: 1.5px solid #D2BBA5;
-            background-color: transparent;
-            padding: 0.5rem 1.5rem;
-            border-radius: 9999px;
-            transition: all 0.3s ease;
+
+        /* Buttons and accents */
+        .btn-outline-ceramic {
+            border: 1px solid var(--deep-clay);
+            color: var(--deep-clay);
+            transition: all 0.2s;
         }
-        
-        .btn-outline:hover {
-            background-color: #D2BBA5;
+        .btn-outline-ceramic:hover {
+            background-color: var(--deep-clay);
             color: white;
-            transform: translateY(-2px);
         }
         
+        .glaze-badge {
+            background-color: var(--sage);
+            color: var(--text-dark);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
         /* Mobile menu styles */
         .mobile-menu {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
+            background-color: #FDFBF7;
         }
         
         .mobile-menu.open {
@@ -146,7 +116,7 @@
             display: block;
             width: 24px;
             height: 2px;
-            background-color: #3D3527;
+            background-color: var(--text-dark);
             margin: 5px 0;
             transition: 0.3s;
         }
@@ -162,90 +132,55 @@
         .hamburger.active span:nth-child(3) {
             transform: rotate(45deg) translate(-5px, -6px);
         }
-        
-        /* Overlay */
+
         .overlay {
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease-in-out;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(74, 59, 50, 0.4);
         }
         
         .overlay.active {
             opacity: 1;
             visibility: visible;
         }
-        
-        /* Loading indicator */
+
         .htmx-indicator {
             opacity: 0;
             transition: opacity 200ms ease-in;
         }
-        
         .htmx-request .htmx-indicator {
             opacity: 1;
         }
         
-        .htmx-request.htmx-indicator {
-            opacity: 1;
-        }
-        
-        /* Loading bar */
-        .loading-bar {
-            height: 2px;
-            background: linear-gradient(90deg, #E07A5F 0%, #D2BBA5 50%, #E07A5F 100%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #E8E0D5;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #D2BBA5;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #B89A7A;
-        }
-        
-        /* Selection color */
+        /* Custom scroll & selection */
         ::selection {
-            background-color: #E07A5F;
-            color: white;
+            background-color: var(--dusty-pink);
+            color: var(--text-dark);
+        }
+        
+        /* Color swatch preview (for product filters) */
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(0,0,0,0.1);
         }
     </style>
-    
-    <!-- Additional CSS block for page-specific styles -->
-    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-clay font-sans antialiased">
+<body class="bg-[#FDFBF7] text-[#4A3B32]">
     <!-- Mobile Menu Overlay -->
     <div id="overlay" class="overlay fixed inset-0 z-40 md:hidden"></div>
     
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 w-80 h-full bg-cream z-50 md:hidden shadow-xl soft-border">
-        <div class="p-6">
+    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 w-80 h-full z-50 md:hidden shadow-xl">
+        <div class="p-6 flex flex-col h-full">
             <div class="flex justify-between items-center mb-8">
-                <a href="{% url 'products:index' %}" 
-                   hx-get="{% url 'products:index' %}" 
-                   hx-target="#product-content" 
-                   hx-push-url="true"
-                   class="font-serif text-xl tracking-wide text-potteryDark hover:text-terracotta transition-colors">
-                    Ceramics Studio
-                </a>
+                <h2 class="text-xl font-light tracking-wide text-[#4A3B32]">
+                    CERAMIC <span class="font-semibold">STUDIO</span>
+                </h2>
                 <button id="closeMenu" class="hamburger active">
                     <span></span>
                     <span></span>
@@ -253,52 +188,43 @@
                 </button>
             </div>
             
-            <nav class="space-y-5">
+            <nav class="space-y-6 flex-1">
                 <a href="{% url 'products:index' %}" 
                    hx-get="{% url 'products:index' %}" 
-                   hx-target="#product-content" 
+                   hx-target="#main-content" 
                    hx-push-url="true"
-                   class="mobile-nav-link block text-gray-700 hover:text-terracotta py-2 border-b border-pottery/20 font-medium tracking-wide">
-                   Главная
+                   class="mobile-nav-link block text-lg font-medium text-[#4A3B32] hover:text-[#C4A690] py-2 border-b border-[#E8E2D9]">
+                   HOME
                 </a>
                 {% for category in categories %}
                 <a href="{% url 'products:catalog' category.slug %}" 
                    hx-get="{% url 'products:catalog' category.slug %}" 
-                   hx-target="#product-content" 
+                   hx-target="#main-content" 
                    hx-push-url="true"
-                   class="mobile-nav-link block text-gray-700 hover:text-terracotta py-2 border-b border-pottery/20 font-medium tracking-wide {% if current_category.slug == category.slug %}text-terracotta font-semibold{% endif %}">
-                   {{ category.name }}
+                   class="mobile-nav-link block text-lg font-medium text-[#4A3B32] hover:text-[#C4A690] py-2 border-b border-[#E8E2D9] {% if current_category == category.slug %}active font-semibold{% endif %}">
+                   {{ category.name|upper }}
                 </a>
                 {% endfor %}
             </nav>
             
-            <div class="mt-10 pt-6 border-t border-pottery/20 space-y-4">
-                <div id="mobile-search-wrapper">
-                    <button hx-get="{% url 'products:catalog_all' %}?show_search=true" 
-                            hx-target="#mobile-search-wrapper" 
-                            hx-swap="innerHTML"
-                            class="w-full text-left text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
-                        🔍 Поиск
-                    </button>
-                </div>
+            <div class="mt-8 space-y-4 pt-6 border-t border-[#E8E2D9]">
+                <a href="#" class="block text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] py-1">SEARCH</a>
                 <a href="{% url 'users:profile' %}" 
                    hx-get="{% url 'users:profile' %}" 
-                   hx-target="#product-content" 
+                   hx-target="#main-content" 
                    hx-push-url="true"
-                   class="block text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
-                   👤 Аккаунт
+                   class="block text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] py-1 uppercase tracking-wide">
+                    ACCOUNT
                 </a>
-                <a href="#" id="mobileCart" class="block text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
-                   🛒 Корзина (0)
-                </a>
+                <a href="#" id="mobileCart" class="block text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] py-1">CART (0)</a>
             </div>
         </div>
     </div>
 
     <!-- Header -->
-    <header class="sticky top-0 z-30 bg-clay/95 backdrop-blur-sm soft-border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 lg:h-20">
+    <header class="sticky top-0 z-30 bg-[#FDFBF7]/90 backdrop-blur-sm border-b border-[#E8E2D9]">
+        <div class="mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
                 <!-- Mobile Menu Button -->
                 <button id="menuToggle" class="hamburger md:hidden">
                     <span></span>
@@ -307,163 +233,110 @@
                 </button>
                 
                 <!-- Logo -->
-<div class="flex-shrink-0">
-    <a href="{% url 'products:index' %}" 
-       hx-get="{% url 'products:index' %}" 
-       hx-target="#product-content" 
-       hx-push-url="true"
-       class="block">
-        <h1 class="font-serif text-xl lg:text-2xl tracking-wide text-potteryDark">
-            Ceramics<br>
-            <span class="text-sm font-sans font-light tracking-widest text-stone">STUDIO</span>
-        </h1>
-    </a>
-</div>
+                <div class="flex-shrink-0">
+                    <a href="{% url 'products:index' %}" 
+                       hx-get="{% url 'products:index' %}" 
+                       hx-target="#main-content" 
+                       hx-push-url="true"
+                       class="block">
+                        <h1 class="text-sm sm:text-xl font-light tracking-wide text-[#4A3B32]">
+                            CERAMIC <span class="font-semibold">STUDIO</span>
+                            <span class="hidden sm:inline-block text-xs font-light text-[#7A685A] ml-1">handmade</span>
+                        </h1>
+                    </a>
+                </div>
                 
                 <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8 lg:space-x-12">
+                <nav class="hidden md:flex space-x-10">
                     {% for category in categories %}
                     <a href="{% url 'products:catalog' category.slug %}" 
                        hx-get="{% url 'products:catalog' category.slug %}" 
-                       hx-target="#product-content" 
+                       hx-target="#main-content" 
                        hx-push-url="true"
-                       class="nav-link text-sm lg:text-base font-medium text-gray-700 hover:text-terracotta whitespace-nowrap {% if current_category.slug == category.slug %}text-terracotta{% endif %}">
-                       {{ category.name }}
+                       class="nav-link text-sm font-medium {% if current_category == category.slug %}active{% endif %}">
+                       {{ category.name|upper }}
                     </a>
                     {% endfor %}
                 </nav>
                 
-                <!-- Right side icons -->
-                <div class="flex items-center space-x-4 lg:space-x-6">
-                    <!-- Search desktop -->
-                    <div class="hidden md:block" id="desktop-search-wrapper">
+                <!-- Right side links -->
+                <div class="hidden md:flex items-center space-x-7">
+                    <div class="relative" id="desktop-search-wrapper">
                         <button id="desktop-search-toggle" 
                                 hx-get="{% url 'products:catalog_all' %}?show_search=true" 
                                 hx-target="#desktop-search-wrapper" 
                                 hx-swap="innerHTML"
-                                class="text-gray-600 hover:text-terracotta transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                                class="text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] uppercase tracking-wide">
+                            SEARCH
                         </button>
                     </div>
-                    
                     <a href="{% url 'users:profile' %}" 
                        hx-get="{% url 'users:profile' %}" 
-                       hx-target="#product-content" 
+                       hx-target="#main-content" 
                        hx-push-url="true"
-                       class="hidden md:block text-gray-600 hover:text-terracotta transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
+                       class="text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] uppercase tracking-wide">
+                        ACCOUNT
                     </a>
-                    
-                    <button id="desktopCart" class="text-gray-600 hover:text-terracotta transition-colors relative">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6m12 0l-1.5-6M9 21h6m-6 0a1.5 1.5 0 11-3 0m9 0a1.5 1.5 0 11-3 0"></path>
+                    <a href="#" id="desktopCart" class="text-sm font-medium text-[#7A685A] hover:text-[#4A3B32] flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 15v6" />
                         </svg>
-                        <span id="cartCountDesktop" class="absolute -top-2 -right-2 bg-terracotta text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                    </button>
+                        CART (<span id="cart-count-desktop">0</span>)
+                    </a>
                 </div>
                 
                 <!-- Mobile Cart Icon -->
-                <div class="md:hidden">
-                    <button id="mobileCartHeader" class="text-gray-600 hover:text-terracotta relative">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6m12 0l-1.5-6M9 21h6m-6 0a1.5 1.5 0 11-3 0m9 0a1.5 1.5 0 11-3 0"></path>
+                <div class="md:hidden flex items-center gap-3">
+                    <a href="#" id="mobileCartHeader" class="text-xs font-medium text-[#7A685A] flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 15v6" />
                         </svg>
-                        <span id="cartCountMobile" class="absolute -top-2 -right-2 bg-terracotta text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                    </button>
+                        (<span id="cart-count-mobile">0</span>)
+                    </a>
                 </div>
             </div>
         </div>
     </header>
+    <div id="cart-container"></div>
 
     <!-- Loading Indicator -->
-    <div class="htmx-indicator fixed top-0 left-0 w-full z-40">
-        <div class="loading-bar w-full"></div>
-    </div>
- 
+    <div class="htmx-indicator fixed top-0 left-0 w-full h-0.5 bg-[#C4A690] z-50 transition-all duration-200"></div>
 
-<div id="cart-container"></div>
-    <!-- product Content -->
-    <main id="product-content" class="min-h-screen">
+    <!-- Main Content -->
+    <div id="main-content" class="min-h-[70vh]">
         {% block content %}
-        <!-- Default content will be overridden by child templates -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-            <div class="text-center py-20">
-                <h2 class="font-serif text-5xl lg:text-6xl text-potteryDark mb-6">
-                    Добро пожаловать
+        <!-- Default home content with ceramic-focused design -->
+        <main class="mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center py-12 max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-[#4A3B32] mb-4">
+                    Handcrafted <span class="font-semibold">Ceramics</span>
                 </h2>
-                <p class="text-gray-600 text-lg mb-12 max-w-md mx-auto">
-                    Ручная работа из натуральной глины. Каждое изделие уникально.
+                <p class="text-base text-[#7A685A] mb-8 leading-relaxed">
+                    Functional art for your table — each piece is unique, 
+                    shaped by hand and finished with natural glazes.
                 </p>
-                <div class="flex flex-wrap justify-center gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-8">
                     {% for category in categories %}
                     <a href="{% url 'products:catalog' category.slug %}" 
                        hx-get="{% url 'products:catalog' category.slug %}" 
-                       hx-target="#product-content" 
+                       hx-target="#main-content" 
                        hx-push-url="true"
-                       class="btn-outline">
-                       {{ category.name }}
+                       class="category-card block p-8 rounded-md shadow-sm transition-all">
+                        <h3 class="text-xl font-medium tracking-wide mb-2">{{ category.name|title }}</h3>
+                        <p class="text-sm text-[#7A685A]">Explore collection →</p>
                     </a>
                     {% endfor %}
                 </div>
+                <!-- Decorative element -->
+                <div class="mt-16 flex justify-center gap-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#C4A690]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#D9E0D2]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#E3C9B7]"></span>
+                </div>
             </div>
-        </div>
+        </main>
         {% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-pottery/5 border-t border-pottery/20 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-                <!-- About -->
-                <div>
-                    <h3 class="font-serif text-xl text-potteryDark mb-4">Ceramics Studio</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Керамическая мастерская. Создаем уникальную посуду и декор ручной работы с душой и вниманием к деталям.
-                    </p>
-                </div>
-                
-                <!-- Quick links -->
-                <div>
-                    <h3 class="font-serif text-lg text-potteryDark mb-4">Информация</h3>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-terracotta transition-colors">О нас</a></li>
-                        <li><a href="#" class="hover:text-terracotta transition-colors">Доставка и оплата</a></li>
-                        <li><a href="#" class="hover:text-terracotta transition-colors">Контакты</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Social -->
-                <div>
-                    <h3 class="font-serif text-lg text-potteryDark mb-4">Мы в соцсетях</h3>
-                    <div class="flex justify-center md:justify-start space-x-6">
-                        <a href="#" class="text-gray-500 hover:text-terracotta transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-500 hover:text-terracotta transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.315 4.08c-3.227 0-5.84 2.613-5.84 5.84 0 3.227 2.613 5.84 5.84 5.84s5.84-2.613 5.84-5.84c0-3.227-2.613-5.84-5.84-5.84zm0 9.44c-1.986 0-3.6-1.614-3.6-3.6 0-1.986 1.614-3.6 3.6-3.6s3.6 1.614 3.6 3.6c0 1.986-1.614 3.6-3.6 3.6zm6.23-8.74c-.84 0-1.52.68-1.52 1.52s.68 1.52 1.52 1.52 1.52-.68 1.52-1.52-.68-1.52-1.52-1.52z"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-500 hover:text-terracotta transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.68-1.68-1.68a1.68 1.68 0 0 0-1.68 1.68c0 .93.75 1.68 1.68 1.68zm1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="border-t border-pottery/20 mt-8 pt-8 text-center">
-                <p class="text-gray-500 text-sm">© 2024 Ceramics Studio. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -476,51 +349,46 @@
             function openMobileMenu() {
                 mobileMenu.classList.add('open');
                 overlay.classList.add('active');
-                if (menuToggle) menuToggle.classList.add('active');
+                menuToggle.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
     
             function closeMobileMenu() {
                 mobileMenu.classList.remove('open');
                 overlay.classList.remove('active');
-                if (menuToggle) menuToggle.classList.remove('active');
+                menuToggle.classList.remove('active');
                 document.body.style.overflow = '';
             }
     
-            if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
-            if (closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
-            if (overlay) overlay.addEventListener('click', closeMobileMenu);
+            if(menuToggle) menuToggle.addEventListener('click', openMobileMenu);
+            if(closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
+            if(overlay) overlay.addEventListener('click', closeMobileMenu);
     
-            // Close mobile menu after HTMX navigation
+            // Close mobile menu after navigation
             document.addEventListener('htmx:afterRequest', function() {
                 closeMobileMenu();
             });
     
-            // Close mobile menu on window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 768) {
-                    closeMobileMenu();
-                }
-            });
-    
             // Cart functionality
-            function updateCartCounts(count) {
-                const cartCountDesktop = document.getElementById('cartCountDesktop');
-                const cartCountMobile = document.getElementById('cartCountMobile');
+            function updateCartCountUI(totalItems) {
+                const desktopCountSpan = document.getElementById('cart-count-desktop');
+                const mobileCountSpan = document.getElementById('cart-count-mobile');
+                const mobileCartLink = document.getElementById('mobileCart');
                 
-                if (cartCountDesktop) cartCountDesktop.textContent = count;
-                if (cartCountMobile) cartCountMobile.textContent = count;
+                if (desktopCountSpan) desktopCountSpan.innerText = totalItems;
+                if (mobileCountSpan) mobileCountSpan.innerText = totalItems;
+                if (mobileCartLink) mobileCartLink.innerText = `CART (${totalItems})`;
             }
             
-            function fetchCartCount() {
+            function updateCartCount() {
                 fetch('{% url "cart:cart_count" %}')
                     .then(response => response.json())
                     .then(data => {
-                        updateCartCounts(data.total_items);
+                        updateCartCountUI(data.total_items);
                     })
-                    .catch(error => console.error('Error fetching cart count:', error));
+                    .catch(err => console.warn("Cart count fetch error", err));
             }
-            
+    
             function openCart() {
                 htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
                     target: '#cart-container',
@@ -528,71 +396,67 @@
                 });
             }
             
-            // Cart buttons
-            const desktopCartBtn = document.getElementById('desktopCart');
-            const mobileCartBtn = document.getElementById('mobileCartHeader');
+            // Bind cart links
+            const desktopCartLink = document.getElementById('desktopCart');
             const mobileCartLink = document.getElementById('mobileCart');
+            const mobileCartHeaderLink = document.getElementById('mobileCartHeader');
             
-            const cartHandlers = [desktopCartBtn, mobileCartBtn, mobileCartLink];
-            cartHandlers.forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', function(e) {
+            [desktopCartLink, mobileCartLink, mobileCartHeaderLink].forEach(link => {
+                if (link) {
+                    link.addEventListener('click', function(e) {
                         e.preventDefault();
                         openCart();
                     });
                 }
             });
-            
-            // Initial cart count load
-            fetchCartCount();
+    
+            // Resize handling
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    closeMobileMenu();
+                }
+            });
+    
+            // Update active navigation links after HTMX
+            document.addEventListener('htmx:afterSettle', function() {
+                updateActiveNavLinks();
+                updateCartCount();  // refresh cart icon after any partial update
+            });
+    
+            function updateActiveNavLinks() {
+                const currentPath = window.location.pathname;
+                const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('active');
+                    }
+                });
+            }
             
             // Listen for cart updates
             document.addEventListener('cartUpdated', function(e) {
                 if (e.detail && e.detail.total_items !== undefined) {
-                    updateCartCounts(e.detail.total_items);
+                    updateCartCountUI(e.detail.total_items);
                 } else {
-                    fetchCartCount();
+                    updateCartCount(); // fallback fetch
                 }
             });
             
-            // Update active nav links after HTMX navigation
-            document.addEventListener('htmx:afterSettle', function() {
-                const currentPath = window.location.pathname;
-                const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-
-                navLinks.forEach(link => {
-                    const href = link.getAttribute('href');
-                    if (href && href === currentPath) {
-                        link.classList.add('active', 'text-terracotta');
-                    } else {
-                        link.classList.remove('active', 'text-terracotta');
-                    }
-                });
-            });
-
-            document.addEventListener('htmx:afterSwap', function(event) {
-                if (event.target && (event.target.id === 'desktop-search-wrapper' || event.target.id === 'mobile-search-wrapper')) {
-                    const input = event.target.querySelector('#search-input');
-                    if (input) {
-                        input.focus();
-                        input.select();
-                    }
-                }
-            });
+            // initial cart load
+            updateCartCount();
         });
         
-        // Global function to update cart count (for external calls)
-        window.updateCartCount = function(count) {
-            const cartCountDesktop = document.getElementById('cartCountDesktop');
-            const cartCountMobile = document.getElementById('cartCountMobile');
-            
-            if (cartCountDesktop) cartCountDesktop.textContent = count;
-            if (cartCountMobile) cartCountMobile.textContent = count;
+        // Expose global helper if needed
+        window.updateHeaderCartCount = function(count) {
+            const desktopSpan = document.getElementById('cart-count-desktop');
+            const mobileSpan = document.getElementById('cart-count-mobile');
+            const mobileCartLink = document.getElementById('mobileCart');
+            if(desktopSpan) desktopSpan.innerText = count;
+            if(mobileSpan) mobileSpan.innerText = count;
+            if(mobileCartLink) mobileCartLink.innerText = `CART (${count})`;
         };
-
     </script>
-    
-    <!-- Additional JS block for page-specific scripts -->
-    {% block extra_js %}{% endblock %}
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -18,7 +18,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('main:index')
+            return redirect('products:index')
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -30,7 +30,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('main:index')
+            return redirect('products:index')
     else:
         form = CustomUserLoginForm()
     return render(request, 'users/login.html', {'form': form})
@@ -93,8 +93,8 @@ def update_account_details(request):
 def logout_view(request):
     logout(request)
     if request.headers.get('HX-Request'):
-        return HttpResponse(headers={'HX-Redirect': reverse('main:index')})
-    return redirect('main:index')
+        return HttpResponse(headers={'HX-Redirect': reverse('products:index')})
+    return redirect('products:index')
 
 @login_required
 def order_history(request):

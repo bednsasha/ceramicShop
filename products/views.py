@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, DetailView
 from django.template.response import TemplateResponse
 from .models import Category, Product, SizeAttribute
 from django.db.models import Q
-
+from django.http import HttpResponse
 
 class IndexView(TemplateView):
     template_name = "products/base.html"
@@ -74,6 +74,7 @@ class CatalogView(TemplateView):
             'current_category': current_category,
             'filter_params': filter_params,
             'sizes': SizeAttribute.objects.all(),
+            'glaze_choices': Product.GLAZE_CHOICES,
             'search_query': query or ''
         })
 
@@ -86,19 +87,13 @@ class CatalogView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-
-        if request.headers.get("HX-Request"):
-            if context.get("show_search"):
+        if request.headers.get('HX-Request'):
+            if context.get('show_search'):
                 return TemplateResponse(request, 'products/search_input.html', context)
-            elif context.get("reset_search"):
-                target = request.GET.get('target', 'desktop')
-                template = "products/mobile_search_button.html" if target == 'mobile' else "products/search_button.html"
-                return TemplateResponse(request, template, {})
-
-            template = 'products/filter_modal.html' if request.GET.get(
-                "show_filters") == 'true' else "products/catalog.html"
+            elif context.get('reset_search'):
+                return TemplateResponse(request, 'products/search_button.html', {})
+            template = 'products/filter_modal.html' if request.GET.get('show_filters') == 'true' else 'products/catalog.html'
             return TemplateResponse(request, template, context)
-
         return TemplateResponse(request, self.template_name, context)
 
 

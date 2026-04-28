@@ -1,11 +1,7 @@
-<!-- Desktop Search Button -->
 <button id="search-toggle" 
         hx-get="{% url 'products:catalog_all' %}?show_search=true" 
-        hx-target="#desktop-search-wrapper" 
+        hx-target="#search-wrapper, #mobile-search-wrapper" 
         hx-swap="innerHTML"
-        class="text-stone hover:text-terracotta transition-colors duration-300">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-    </svg>
-    <span class="sr-only">Поиск</span>
+        class="text-sm font-medium uppercase tracking-wide text-[#7A685A] hover:text-[#C4A690] transition-colors duration-200">
+    SEARCH
 </button>
