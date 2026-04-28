@@ -3,14 +3,14 @@
     <!-- Breadcrumb -->
     <div class="mb-8">
         <nav class="text-sm text-stone">
-            <a href="{% url 'product:index' %}" 
-               hx-get="{% url 'product:index' %}" 
+            <a href="{% url 'products:index' %}" 
+               hx-get="{% url 'products:index' %}" 
                hx-target="#main-content" 
                hx-push-url="true"
                class="hover:text-terracotta transition-colors">Главная</a>
             <span class="mx-2 text-pottery">/</span>
-            <a href="{% url 'product:catalog' product.category.slug %}" 
-               hx-get="{% url 'product:catalog' product.category.slug %}" 
+            <a href="{% url 'products:catalog' product.category.slug %}" 
+               hx-get="{% url 'products:catalog' product.category.slug %}" 
                hx-target="#main-content" 
                hx-push-url="true"
                class="hover:text-terracotta transition-colors">{{ product.category.name }}</a>

@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <form hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}" 
+    <form hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}" 
           hx-target="#main-content" 
           hx-push-url="true"
           hx-indicator="#filter-indicator">

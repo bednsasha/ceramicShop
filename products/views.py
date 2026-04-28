@@ -6,7 +6,7 @@ from django.db.models import Q
 
 
 class IndexView(TemplateView):
-    template_name = "products/base.html"  # ← исправлено
+    template_name = "products/base.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,9 +28,7 @@ class CatalogView(TemplateView):
         'color': lambda queryset, value: queryset.filter(color__iexact=value),
         'min_price': lambda queryset, value: queryset.filter(price__gte=value),
         'max_price': lambda queryset, value: queryset.filter(price__lte=value),
-        # ← исправлено: product_sizes
         'min_size': lambda queryset, value: queryset.filter(product_sizes__value__gte=value),
-        # ← исправлено: product_sizes
         'max_size': lambda queryset, value: queryset.filter(product_sizes__value__lte=value),
         'glaze_type': lambda queryset, value: queryset.filter(glaze_type=value)
     }
@@ -91,14 +89,14 @@ class CatalogView(TemplateView):
 
         if request.headers.get("HX-Request"):
             if context.get("show_search"):
-                # ← исправлено
                 return TemplateResponse(request, 'products/search_input.html', context)
             elif context.get("reset_search"):
-                # ← исправлено
-                return TemplateResponse(request, "products/search_button.html", {})
+                target = request.GET.get('target', 'desktop')
+                template = "products/mobile_search_button.html" if target == 'mobile' else "products/search_button.html"
+                return TemplateResponse(request, template, {})
 
             template = 'products/filter_modal.html' if request.GET.get(
-                "show_filters") == 'true' else "products/catalog.html"  # ← исправлено
+                "show_filters") == 'true' else "products/catalog.html"
             return TemplateResponse(request, template, context)
 
         return TemplateResponse(request, self.template_name, context)
@@ -125,6 +123,5 @@ class ProductDetailView(DetailView):
         context = self.get_context_data(**kwargs)
 
         if request.headers.get('HX-Request'):
-            # ← исправлено
             return TemplateResponse(request, 'products/product_detail_content.html', context)
         return TemplateResponse(request, self.template_name, context)

@@ -239,8 +239,8 @@
     <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 w-80 h-full bg-cream z-50 md:hidden shadow-xl soft-border">
         <div class="p-6">
             <div class="flex justify-between items-center mb-8">
-                <a href="{% url 'product:index' %}" 
-                   hx-get="{% url 'product:index' %}" 
+                <a href="{% url 'products:index' %}" 
+                   hx-get="{% url 'products:index' %}" 
                    hx-target="#product-content" 
                    hx-push-url="true"
                    class="font-serif text-xl tracking-wide text-potteryDark hover:text-terracotta transition-colors">
@@ -254,16 +254,16 @@
             </div>
             
             <nav class="space-y-5">
-                <a href="{% url 'product:index' %}" 
-                   hx-get="{% url 'product:index' %}" 
+                <a href="{% url 'products:index' %}" 
+                   hx-get="{% url 'products:index' %}" 
                    hx-target="#product-content" 
                    hx-push-url="true"
                    class="mobile-nav-link block text-gray-700 hover:text-terracotta py-2 border-b border-pottery/20 font-medium tracking-wide">
                    Главная
                 </a>
                 {% for category in categories %}
-                <a href="{% url 'product:catalog' category.slug %}" 
-                   hx-get="{% url 'product:catalog' category.slug %}" 
+                <a href="{% url 'products:catalog' category.slug %}" 
+                   hx-get="{% url 'products:catalog' category.slug %}" 
                    hx-target="#product-content" 
                    hx-push-url="true"
                    class="mobile-nav-link block text-gray-700 hover:text-terracotta py-2 border-b border-pottery/20 font-medium tracking-wide {% if current_category.slug == category.slug %}text-terracotta font-semibold{% endif %}">
@@ -273,12 +273,14 @@
             </nav>
             
             <div class="mt-10 pt-6 border-t border-pottery/20 space-y-4">
-                <button hx-get="{% url 'product:catalog_all' %}?show_search=true" 
-                        hx-target="#mobile-search-wrapper" 
-                        hx-swap="innerHTML"
-                        class="w-full text-left text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
-                    🔍 Поиск
-                </button>
+                <div id="mobile-search-wrapper">
+                    <button hx-get="{% url 'products:catalog_all' %}?show_search=true" 
+                            hx-target="#mobile-search-wrapper" 
+                            hx-swap="innerHTML"
+                            class="w-full text-left text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
+                        🔍 Поиск
+                    </button>
+                </div>
                 <a href="{% url 'users:profile' %}" 
                    hx-get="{% url 'users:profile' %}" 
                    hx-target="#product-content" 
@@ -305,24 +307,24 @@
                 </button>
                 
                 <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <a href="{% url 'product:index' %}" 
-                       hx-get="{% url 'product:index' %}" 
-                       hx-target="#product-content" 
-                       hx-push-url="true"
-                       class="block">
-                        <h1 class="font-serif text-xl lg:text-2xl tracking-wide text-potteryDark">
-                            Ceramics<br>
-                            <span class="text-sm font-sans font-light tracking-widest text-stone">STUDIO</span>
-                        </h1>
-                    </a>
-                </div>
+<div class="flex-shrink-0">
+    <a href="{% url 'products:index' %}" 
+       hx-get="{% url 'products:index' %}" 
+       hx-target="#product-content" 
+       hx-push-url="true"
+       class="block">
+        <h1 class="font-serif text-xl lg:text-2xl tracking-wide text-potteryDark">
+            Ceramics<br>
+            <span class="text-sm font-sans font-light tracking-widest text-stone">STUDIO</span>
+        </h1>
+    </a>
+</div>
                 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8 lg:space-x-12">
                     {% for category in categories %}
-                    <a href="{% url 'product:catalog' category.slug %}" 
-                       hx-get="{% url 'product:catalog' category.slug %}" 
+                    <a href="{% url 'products:catalog' category.slug %}" 
+                       hx-get="{% url 'products:catalog' category.slug %}" 
                        hx-target="#product-content" 
                        hx-push-url="true"
                        class="nav-link text-sm lg:text-base font-medium text-gray-700 hover:text-terracotta whitespace-nowrap {% if current_category.slug == category.slug %}text-terracotta{% endif %}">
@@ -336,7 +338,7 @@
                     <!-- Search desktop -->
                     <div class="hidden md:block" id="desktop-search-wrapper">
                         <button id="desktop-search-toggle" 
-                                hx-get="{% url 'product:catalog_all' %}?show_search=true" 
+                                hx-get="{% url 'products:catalog_all' %}?show_search=true" 
                                 hx-target="#desktop-search-wrapper" 
                                 hx-swap="innerHTML"
                                 class="text-gray-600 hover:text-terracotta transition-colors">
@@ -384,9 +386,6 @@
  
 
 <div id="cart-container"></div>
-<button id="desktopCart">Корзина (0)</button>
-
-
     <!-- product Content -->
     <main id="product-content" class="min-h-screen">
         {% block content %}
@@ -401,8 +400,8 @@
                 </p>
                 <div class="flex flex-wrap justify-center gap-4">
                     {% for category in categories %}
-                    <a href="{% url 'product:catalog' category.slug %}" 
-                       hx-get="{% url 'product:catalog' category.slug %}" 
+                    <a href="{% url 'products:catalog' category.slug %}" 
+                       hx-get="{% url 'products:catalog' category.slug %}" 
                        hx-target="#product-content" 
                        hx-push-url="true"
                        class="btn-outline">
@@ -560,7 +559,7 @@
             document.addEventListener('htmx:afterSettle', function() {
                 const currentPath = window.location.pathname;
                 const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-                
+
                 navLinks.forEach(link => {
                     const href = link.getAttribute('href');
                     if (href && href === currentPath) {
@@ -569,6 +568,16 @@
                         link.classList.remove('active', 'text-terracotta');
                     }
                 });
+            });
+
+            document.addEventListener('htmx:afterSwap', function(event) {
+                if (event.target && (event.target.id === 'desktop-search-wrapper' || event.target.id === 'mobile-search-wrapper')) {
+                    const input = event.target.querySelector('#search-input');
+                    if (input) {
+                        input.focus();
+                        input.select();
+                    }
+                }
             });
         });
         
@@ -580,6 +589,7 @@
             if (cartCountDesktop) cartCountDesktop.textContent = count;
             if (cartCountMobile) cartCountMobile.textContent = count;
         };
+
     </script>
     
     <!-- Additional JS block for page-specific scripts -->

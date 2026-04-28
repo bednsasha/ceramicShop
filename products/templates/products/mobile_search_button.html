@@ -1,0 +1,7 @@
+<!-- Mobile Search Button -->
+<button hx-get="{% url 'products:catalog_all' %}?show_search=true" 
+        hx-target="#mobile-search-wrapper" 
+        hx-swap="innerHTML"
+        class="w-full text-left text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
+    🔍 Поиск
+</button>

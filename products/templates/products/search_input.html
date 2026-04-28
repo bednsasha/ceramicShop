@@ -5,10 +5,10 @@
            placeholder="Поиск товаров..." 
            value="{{ search_query|default:'' }}"
            class="w-full md:w-64 lg:w-80 bg-cream/50 border border-pottery/30 rounded-lg py-2.5 pl-10 pr-8 text-sm text-stone placeholder-stone/50 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-all duration-300"
-           hx-get="{% url 'product:catalog_all' %}" 
-           hx-target="#main-content" 
+           hx-get="{% url 'products:catalog_all' %}" 
+           hx-target="#product-content" 
            hx-push-url="true"
-           hx-trigger="input delay:500ms"
+           hx-trigger="input delay:500ms, keyup[key=='Enter']"
            hx-swap="innerHTML"
            hx-indicator="#search-indicator">
     
@@ -20,9 +20,9 @@
     <!-- Clear Button -->
     <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone/50 hover:text-terracotta transition-colors duration-300"
             id="clear-search-btn"
-            hx-get="{% url 'product:catalog_all' %}?reset_search=true" 
-            hx-target="#search-wrapper, #mobile-search-wrapper"
-            hx-swap="outerHTML">
+            hx-get="{% url 'products:catalog_all' %}?reset_search=true" 
+            hx-target=""
+            hx-swap="innerHTML">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -41,6 +41,18 @@
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search-input');
         const clearBtn = document.getElementById('clear-search-btn');
+        
+        // Set the correct target for clear button
+        if (clearBtn) {
+            const wrapper = clearBtn.closest('[id*="search-wrapper"]');
+            if (wrapper) {
+                const targetId = wrapper.id;
+                clearBtn.setAttribute('hx-target', '#' + targetId);
+                const url = clearBtn.getAttribute('hx-get');
+                const targetType = targetId === 'desktop-search-wrapper' ? 'desktop' : 'mobile';
+                clearBtn.setAttribute('hx-get', url + '&target=' + targetType);
+            }
+        }
         
         // Initial clear button visibility
         function updateClearButton() {
@@ -74,6 +86,15 @@
                 updateClearButton();
             });
             
+            // Blur on Enter so results page doesn't keep focus in the search field
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    setTimeout(function() {
+                        searchInput.blur();
+                    }, 0);
+                }
+            });
+
             // Auto-focus when search is opened
             searchInput.focus();
             
@@ -100,15 +121,6 @@
         });
     });
     
-    // HTMX event to refocus after search
-    document.addEventListener('htmx:afterSwap', function(event) {
-        if (event.target.id === 'main-content') {
-            const searchInput = document.getElementById('search-input');
-            if (searchInput && searchInput.value) {
-                searchInput.focus();
-            }
-        }
-    });
 </script>
 
 <style>

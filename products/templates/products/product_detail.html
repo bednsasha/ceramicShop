@@ -3,14 +3,14 @@
     <!-- Breadcrumb -->
     <div class="mb-8 lg:mb-12">
         <nav class="text-sm text-stone">
-            <a href="{% url 'product:index' %}" 
-               hx-get="{% url 'product:index' %}" 
+            <a href="{% url 'products:index' %}" 
+               hx-get="{% url 'products:index' %}" 
                hx-target="#main-content" 
                hx-push-url="true"
                class="hover:text-terracotta transition-colors">Главная</a>
             <span class="mx-2 text-pottery">/</span>
-            <a href="{% url 'product:catalog' product.category.slug %}" 
-               hx-get="{% url 'product:catalog' product.category.slug %}" 
+            <a href="{% url 'products:catalog' product.category.slug %}" 
+               hx-get="{% url 'products:catalog' product.category.slug %}" 
                hx-target="#main-content" 
                hx-push-url="true"
                class="hover:text-terracotta transition-colors">{{ product.category.name }}</a>
@@ -184,7 +184,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {% for related_product in related_product %}
             <div class="product-card group cursor-pointer" 
-                 hx-get="{% url 'product:product_detail' related_product.slug %}"
+                 hx-get="{% url 'products:product_detail' related_product.slug %}"
                  hx-target="#main-content"
                  hx-push-url="true">
                 <div class="aspect-square overflow-hidden bg-cream soft-border rounded-lg mb-4">

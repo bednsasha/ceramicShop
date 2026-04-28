@@ -16,7 +16,7 @@
         </div>
         
         <button class="btn-outline text-sm flex items-center gap-2" 
-                hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?show_filters=true&color={{ filter_params.color|urlencode }}&min_price={{ filter_params.min_price|urlencode }}&max_price={{ filter_params.max_price|urlencode }}&min_size={{ filter_params.min_size|urlencode }}&max_size={{ filter_params.max_size|urlencode }}&glaze_type={{ filter_params.glaze_type|urlencode }}" 
+                hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?show_filters=true&color={{ filter_params.color|urlencode }}&min_price={{ filter_params.min_price|urlencode }}&max_price={{ filter_params.max_price|urlencode }}&min_size={{ filter_params.min_size|urlencode }}&max_size={{ filter_params.max_size|urlencode }}&glaze_type={{ filter_params.glaze_type|urlencode }}" 
                 hx-target="#filter-modal-content"
                 hx-swap="innerHTML"
                 hx-on::after-request="document.getElementById('filter-modal').classList.remove('hidden')">
@@ -36,7 +36,7 @@
         {% if filter_params.color %}
         <span class="inline-flex items-center gap-1 px-3 py-1 bg-pottery/20 rounded-full text-sm text-stone">
             Цвет: {{ filter_params.color }}
-            <button hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'color' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
+            <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'color' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#product-content"
                     hx-push-url="true"
                     class="ml-1 text-terracotta hover:text-terracotta/70">&times;</button>
@@ -46,7 +46,7 @@
         {% if filter_params.glaze_type %}
         <span class="inline-flex items-center gap-1 px-3 py-1 bg-pottery/20 rounded-full text-sm text-stone">
             Глазурь: {{ filter_params.glaze_type }}
-            <button hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'glaze_type' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
+            <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'glaze_type' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#product-content"
                     hx-push-url="true"
                     class="ml-1 text-terracotta hover:text-terracotta/70">&times;</button>
@@ -56,7 +56,7 @@
         {% if filter_params.min_price or filter_params.max_price %}
         <span class="inline-flex items-center gap-1 px-3 py-1 bg-pottery/20 rounded-full text-sm text-stone">
             Цена: {% if filter_params.min_price %}от {{ filter_params.min_price }}{% endif %} {% if filter_params.max_price %}до {{ filter_params.max_price }}{% endif %} ₽
-            <button hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'min_price' and key != 'max_price' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
+            <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'min_price' and key != 'max_price' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#product-content"
                     hx-push-url="true"
                     class="ml-1 text-terracotta hover:text-terracotta/70">&times;</button>
@@ -66,14 +66,14 @@
         {% if filter_params.min_size or filter_params.max_size %}
         <span class="inline-flex items-center gap-1 px-3 py-1 bg-pottery/20 rounded-full text-sm text-stone">
             Размер: {% if filter_params.min_size %}от {{ filter_params.min_size }}{% endif %} {% if filter_params.max_size %}до {{ filter_params.max_size }}{% endif %}
-            <button hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'min_size' and key != 'max_size' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
+            <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'min_size' and key != 'max_size' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#product-content"
                     hx-push-url="true"
                     class="ml-1 text-terracotta hover:text-terracotta/70">&times;</button>
         </span>
         {% endif %}
         
-        <button hx-get="{% if current_category %}{% url 'product:catalog' current_category.slug %}{% else %}{% url 'product:catalog_all' %}{% endif %}?q={{ filter_params.q|urlencode }}"
+        <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?q={{ filter_params.q|urlencode }}"
                 hx-target="#product-content"
                 hx-push-url="true"
                 class="text-sm text-terracotta hover:text-terracotta/70 underline">
@@ -104,7 +104,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 lg:gap-x-8 lg:gap-y-12">
         {% for product in product %}
         <div class="product-card group cursor-pointer" 
-             hx-get="{% url 'product:product_detail' product.slug %}"
+             hx-get="{% url 'products:product_detail' product.slug %}"
              hx-target="#product-content"
              hx-push-url="true">
             <!-- Product Image -->
@@ -194,8 +194,8 @@
                 В коллекции пока нет изделий. Загляните позже!
             {% endif %}
         </p>
-        <a href="{% url 'product:index' %}" 
-           hx-get="{% url 'product:index' %}" 
+        <a href="{% url 'products:index' %}" 
+           hx-get="{% url 'products:index' %}" 
            hx-target="#product-content" 
            hx-push-url="true"
            class="btn-outline inline-block">
