@@ -15,25 +15,27 @@ from cart.views import CartMixin
 
 logger = logging.getLogger(__name__)
 
-# Настройка YooKassa
 Configuration.account_id = settings.YOOKASSA_SHOP_ID
 Configuration.secret_key = settings.YOOKASSA_SECRET_KEY
 
-
 def create_yookassa_payment(order, request):
-    """
-    Создание платежа в YooKassa
-    """
+
     cart = CartMixin().get_cart(request)
+   
     
-    # Формируем список товаров для чека
+    # ПРОВЕРКА ОСТАТКОВ перед созданием платежа
+    for item in cart.items.all():
+        if item.product_size.stock < item.quantity:
+            raise Exception(f'Товара "{item.product.name}" осталось только {item.product_size.stock} шт. Пожалуйста, обновите корзину.')
+
     receipt_items = []
     for item in cart.items.select_related('product', 'product_size'):
         size_display = f"{item.product_size.size.get_attribute_type_display()}: {item.product_size.value}"
         description = f"{item.product.name} - {size_display}"
-        
+
         receipt_items.append({
-            "description": description[:128],  # YooKassa ограничение 128 символов
+            # YooKassa ограничение 128 символов
+            "description": description[:128],
             "quantity": str(item.quantity),
             "amount": {
                 "value": f"{float(item.product.price):.2f}",
@@ -43,17 +45,17 @@ def create_yookassa_payment(order, request):
             "payment_mode": "full_payment",
             "payment_subject": "commodity"
         })
-    
+
     # Данные клиента для чека
     customer = {
         "email": order.email
     }
     if order.phone:
         customer["phone"] = order.phone
-    
+
     try:
         idempotence_key = str(uuid.uuid4())
-        
+
         payment_data = {
             "amount": {
                 "value": f"{float(order.total_price):.2f}",
@@ -72,24 +74,25 @@ def create_yookassa_payment(order, request):
                 "user_id": order.user.id if order.user else None
             }
         }
-        
+
         # Добавляем чек, если есть товары
         if receipt_items and customer:
             payment_data["receipt"] = {
                 "customer": customer,
                 "items": receipt_items
             }
-        
+
         payment = Payment.create(payment_data, idempotence_key)
-        
+
         # Сохраняем данные платежа
         order.yookassa_payment_id = payment.id
-        
+
         order.save()
-        
-        logger.info(f"Создан платеж YooKassa {payment.id} для заказа #{order.id}")
+
+        logger.info(
+            f"Создан платеж YooKassa {payment.id} для заказа #{order.id}")
         return payment
-        
+
     except Exception as e:
         logger.error(f"Ошибка создания платежа YooKassa: {str(e)}")
         raise
@@ -104,37 +107,53 @@ def yookassa_webhook(request):
     try:
         event = json.loads(request.body)
         logger.info(f"YooKassa webhook получен: {event.get('event')}")
-        
+
         payment_id = event.get('object', {}).get('id')
         payment_status = event.get('object', {}).get('status')
-        
+
         if payment_id and payment_status:
             try:
                 order = Order.objects.get(yookassa_payment_id=payment_id)
                 
-                if payment_status == 'succeeded':
-                    order.status = 'processing'
-                    order.save()
-                    logger.info(f"Заказ #{order.id} успешно оплачен через YooKassa")
-                    
-                elif payment_status == 'canceled':
-                    
-                    order.status = 'cancelled'
-                    order.save()
-                    logger.info(f"Платеж YooKassa для заказа #{order.id} отменен")
-                    
+                # Обрабатываем ТОЛЬКО если статус 'pending' (ещё не обработан)
+                if order.status == 'pending':
+                    if payment_status == 'succeeded':
+                        # Проверяем остатки
+                        for item in order.items.all():
+                            if item.size.stock < item.quantity:
+                                logger.error(f"Недостаточно товара для заказа #{order.id}. Товар: {item.product.name}")
+                                order.status = 'cancelled'
+                                order.save()
+                                return HttpResponse(status=200)
+                        
+                        # УМЕНЬШАЕМ ОСТАТКИ ТОВАРОВ
+                        for item in order.items.all():
+                            item.size.stock -= item.quantity
+                            item.size.save()
+                            logger.info(f"Уменьшен остаток товара {item.product.name}: -{item.quantity}, осталось {item.size.stock}")
+                        
+                        order.status = 'processing'
+                        order.save()
+                        logger.info(f"Заказ #{order.id} успешно оплачен через YooKassa (webhook)")
+
+                    elif payment_status == 'canceled':
+                        order.status = 'cancelled'
+                        order.save()
+                        logger.info(f"Платеж YooKassa для заказа #{order.id} отменен (webhook)")
+                else:
+                    logger.info(f"Заказ #{order.id} уже обработан (статус: {order.status}), webhook игнорируется")
+
             except Order.DoesNotExist:
                 logger.warning(f"Заказ с payment_id {payment_id} не найден")
-                
+
     except json.JSONDecodeError as e:
         logger.error(f"Ошибка парсинга JSON: {e}")
         return HttpResponse(status=400)
     except Exception as e:
         logger.error(f"Ошибка обработки webhook YooKassa: {str(e)}")
         return HttpResponse(status=500)
-    
-    return HttpResponse(status=200)
 
+    return HttpResponse(status=200)
 
 def yookassa_success(request):
     """
@@ -142,46 +161,77 @@ def yookassa_success(request):
     """
     order_id = request.GET.get('order_id')
     order = None
-    
+
     if order_id:
         try:
             order = Order.objects.get(id=order_id)
             
-            # Очищаем корзину
-            cart = CartMixin().get_cart(request)
-            cart.clear()
+            # Уменьшаем остатки ТОЛЬКО если заказ ещё не обработан
+            # и статус не 'processing' (не обработан webhook'ом)
+            if order.status == 'pending':
+                try:
+                    # Проверяем остатки
+                    for item in order.items.all():
+                        if item.size.stock < item.quantity:
+                            logger.error(f"Недостаточно товара для заказа #{order.id}. Товар: {item.product.name}")
+                            order.status = 'cancelled'
+                            order.save()
+                            context = {'order': order, 'error': 'Недостаточно товара'}
+                            if request.headers.get('HX-Request'):
+                                return TemplateResponse(request, 'payment/yookassa_success_content.html', context)
+                            return render(request, 'payment/yookassa_success.html', context)
+                    
+                    # УМЕНЬШАЕМ ОСТАТКИ ТОВАРОВ
+                    for item in order.items.all():
+                        item.size.stock -= item.quantity
+                        item.size.save()
+                        logger.info(f"Уменьшен остаток товара {item.product.name}: -{item.quantity}, осталось {item.size.stock}")
+                    
+                    order.status = 'processing'
+                    order.save()
+                    logger.info(f"Заказ #{order.id} успешно оплачен, остатки обновлены (через success page)")
+                    
+                except Exception as e:
+                    logger.error(f"Ошибка обновления остатков для заказа #{order.id}: {e}")
+                    order.status = 'cancelled'
+                    order.save()
+            else:
+                logger.info(f"Заказ #{order.id} уже обработан (статус: {order.status}), пропускаем списание")
             
+            # Очищаем корзину (если не очищена)
+            cart = CartMixin().get_cart(request)
+            if cart.items.count() > 0:
+                cart.clear()
+
         except Order.DoesNotExist:
             pass
-    
+
     context = {'order': order}
-    
+
     if request.headers.get('HX-Request'):
-        return TemplateResponse(request, 'payment/yookassa_success_content.html', context)
+        return TemplateResponse(request, 'payment/yookassa_success_content.html', context) 
     return render(request, 'payment/yookassa_success.html', context)
-
-
 def yookassa_cancel(request):
     """
     Страница отмены оплаты через YooKassa
     """
     order_id = request.GET.get('order_id')
     order = None
-    
+
     if order_id:
         try:
             order = Order.objects.get(id=order_id)
             order.status = 'cancelled'
-            
+
             order.save()
         except Order.DoesNotExist:
             pass
-    
+
     context = {
         'order': order,
         'message': 'Платеж был отменен. Вы можете повторить попытку в корзине.'
     }
-    
+
     if request.headers.get('HX-Request'):
         return TemplateResponse(request, 'payment/yookassa_cancel_content.html', context)
     return render(request, 'payment/yookassa_cancel.html', context)

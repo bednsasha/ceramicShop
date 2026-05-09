@@ -25,8 +25,11 @@
                 </h2>
                 
                
-                    <form method="post" id="order-form" hx-post="{% url 'orders:checkout' %}" hx-target="#main-content" hx-swap="outerHTML">
-                        {% csrf_token %}
+                    <form method="post" id="order-form" 
+      hx-post="{% url 'orders:checkout' %}" 
+      hx-target="#main-content" 
+      hx-swap="outerHTML">
+    {% csrf_token %}
                     
                     <div class="space-y-4">
                         <div>
@@ -135,6 +138,7 @@
                 
                     <!-- Payment Button -->
 <div class="mt-6">
+    
     <button type="submit" 
             name="create_order" 
             value="create_order" 
