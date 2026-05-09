@@ -3,11 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from .models import CartItem
 from products.models import ProductSize
 
-'''validators=[MinValueValidator(1)],
-        widget=forms.NumberInput(attrs={
-            'class': 'w-16 text-center border border-pottery/30 rounded-lg py-2',
-            'min': '1'
-        })'''
+
 class AddToCartForm(forms.Form):
     size_id = forms.IntegerField(required=False, widget=forms.HiddenInput())
     quantity = forms.IntegerField(
@@ -15,12 +11,6 @@ class AddToCartForm(forms.Form):
         initial=1,
         validators=[MinValueValidator(1)],
     )
-    '''widget=forms.RadioSelect(attrs={
-                        'class': 'size-radio hidden',
-                        'hx-trigger': 'change',
-                        'hx-post': '.',
-                        'hx-target': '#add-to-cart-form'
-                    })'''
     def __init__(self, *args, product=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.product = product
@@ -37,7 +27,6 @@ class AddToCartForm(forms.Form):
                 self.fields['size_id'] = forms.ChoiceField(
                     choices=[('', 'Нет доступных размеров')],
                     required=False,
-                    #widget=forms.Select(attrs={'disabled': 'disabled'})
                 )
     
     def _get_size_display(self, product_size):
@@ -100,14 +89,3 @@ class UpdateCartItemForm(forms.ModelForm):
 
 class RemoveFromCartForm(forms.Form):
     item_id = forms.IntegerField(widget=forms.HiddenInput())
-
-
-'''class ApplyPromoForm(forms.Form):
-    promo_code = forms.CharField(
-        max_length=50,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'w-full border border-pottery/30 rounded-lg py-2 px-4 text-sm',
-            'placeholder': 'Промокод'
-        })
-    )'''

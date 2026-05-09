@@ -8,17 +8,16 @@
 </div>
 
 <script>
-    setTimeout(() => {
-        const notification = document.getElementById('cart-notification');
-        if (notification) notification.style.transform = 'translateX(0)';
+    // Show notification
+     setTimeout(() => {
+        document.getElementById('cart-notification').style.transform = 'translateX(0)';
     }, 10);
     
+    // Hide after 3 seconds
     setTimeout(() => {
-        const notification = document.getElementById('cart-notification');
-        if (notification) notification.style.transform = 'translateX(100%)';
+        document.getElementById('cart-notification').style.transform = 'translateX(100%)';
         setTimeout(() => {
-            const notification = document.getElementById('cart-notification');
-            if (notification) notification.remove();
+            document.getElementById('cart-notification').remove();
         }, 300);
     }, 3000);
 </script>

@@ -1,14 +1,15 @@
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 class="text-2xl font-bold text-gray-900 mb-8 text-center tracking-wide">
+<div class="min-h-screen flex items-center justify-center py-12 px-4" style="background-color: #FDFBF7;">
+    <div class="p-8 w-full max-w-md" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+        <h1 class="text-2xl mb-8 text-center tracking-wide" 
+            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
             ВОЙТИ
         </h1>
         
         {% if messages %}
             <div class="mb-4">
                 {% for message in messages %}
-                    <div class="text-red-500 text-sm text-center">{{ message }}</div>
+                    <div class="text-sm text-center" style="color: #2A2E4D;">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
@@ -22,21 +23,24 @@
             <div>
                 {{ form.username }}
                 {% if form.username.errors %}
-                    <div class="text-red-500 text-xs mt-1">{{ form.username.errors }}</div>
+                    <div class="text-xs mt-1" style="color: #2A2E4D;">{{ form.username.errors }}</div>
                 {% endif %}
             </div>
             
             <div>
                 {{ form.password }}
                 {% if form.password.errors %}
-                    <div class="text-red-500 text-xs mt-1">{{ form.password.errors }}</div>
+                    <div class="text-xs mt-1" style="color: #2A2E4D;">{{ form.password.errors }}</div>
                 {% endif %}
             </div>
             
             <div class="grid grid-cols-2 gap-4 pt-4">
                 <button 
                     type="submit"
-                    class="bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide"
+                    class="py-3 px-6 text-sm font-semibold uppercase tracking-wide transition-all duration-300 rounded-full hover:shadow-md active:scale-[0.98]"
+                    style="background-color: #2A2E4D; color: white;"
+                    onmouseover="this.style.backgroundColor='#3A3F63'"
+                    onmouseout="this.style.backgroundColor='#2A2E4D'"
                 >
                     ВОЙТИ
                 </button>
@@ -45,7 +49,10 @@
                     hx-get="{% url 'users:register' %}"
                     hx-target="#main-content"
                     hx-push-url="true"
-                    class="border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide text-center"
+                    class="py-3 px-6 text-sm font-semibold uppercase tracking-wide transition-all duration-300 rounded-full text-center"
+                    style="border: 1.5px solid #E8E2D9; background-color: transparent; color: #7A685A;"
+                    onmouseover="this.style.borderColor='#2A2E4D'; this.style.backgroundColor='#2A2E4D'; this.style.color='white'; this.style.transform='translateY(-2px)'"
+                    onmouseout="this.style.borderColor='#E8E2D9'; this.style.backgroundColor='transparent'; this.style.color='#7A685A'; this.style.transform='translateY(0)'"
                 >
                     СОЗДАТЬ АККАУНТ
                 </a>
@@ -53,4 +60,29 @@
         </form>
     </div>
 </div>
+
+<style>
+    /* Form input styles */
+    input {
+        width: 100%;
+        border: 1px solid #E8E2D9;
+        border-radius: 0.75rem;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        color: #4A3B32;
+        background-color: white;
+        transition: all 0.3s ease;
+        font-family: 'Chiron GoRound TC', 'Inter', sans-serif;
+    }
+    
+    input:focus {
+        outline: none;
+        border-color: #2A2E4D;
+        box-shadow: 0 0 0 2px rgba(42, 46, 77, 0.1);
+    }
+    
+    input::placeholder {
+        color: #C4A690;
+    }
+</style>
 {% endblock %}

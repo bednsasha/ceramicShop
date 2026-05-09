@@ -6,13 +6,6 @@ from products.models import Product, ProductSize
 
 class Cart(models.Model):
     session_key = models.CharField(max_length=40, unique=True, blank=True, null=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  # ← вместо 'auth.User'
-        on_delete=models.CASCADE, 
-        null=True, 
-        blank=True, 
-        related_name='carts'
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

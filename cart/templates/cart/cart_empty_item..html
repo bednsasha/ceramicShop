@@ -8,14 +8,8 @@
         swap: 'none',
         onLoad: function(response) {
             const data = JSON.parse(response);
-            const cartCountElement = document.getElementById('cart-count');
-            if (cartCountElement) {
-                cartCountElement.textContent = data.total_items;
-            }
-            
-            if (typeof updateHeaderCartCount === 'function') {
-                updateHeaderCartCount(data.total_items);
-            }
+            document.getElementById('cart-count').textContent = data.total_items;
+            updateHeaderCartCount(data.total_items);
             
             // Update subtotal
             const subtotalElement = document.querySelector('#cart-summary .font-medium:last-child');
@@ -23,33 +17,12 @@
                 subtotalElement.textContent = data.subtotal_display || data.subtotal + ' ₽';
             }
             
-            // Update total items display
-            const totalItemsElement = document.querySelector('#cart-summary .text-stone');
-            if (totalItemsElement && data.total_items) {
-                const itemsText = data.total_items === 1 ? 'товар' : (data.total_items < 5 ? 'товара' : 'товаров');
-                totalItemsElement.textContent = data.total_items + ' ' + itemsText;
-            }
-            
-            // If cart is empty, show empty message WITHOUT reloading the whole modal
+            // If cart is empty, show empty message
             if (data.total_items === 0) {
-                const cartItemsContainer = document.getElementById('cart-items');
-                const cartSummary = document.getElementById('cart-summary');
-                
-                if (cartItemsContainer) {
-                    cartItemsContainer.innerHTML = `
-                        <div class="text-center py-20 text-gray-500">
-                            <p class="text-lg mb-4">Ваша корзина пуста</p>
-                            <button onclick="closeCart()" class="text-sm underline">Продолжить покупки</button>
-                        </div>
-                    `;
-                }
-                if (cartSummary) {
-                    cartSummary.innerHTML = `
-                        <div class="text-center text-gray-500">
-                            <p>Ваша корзина пуста</p>
-                        </div>
-                    `;
-                }
+                htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
+                    target: '#cart-modal',
+                    swap: 'outerHTML'
+                });
             }
         }
     });

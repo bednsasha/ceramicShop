@@ -1,25 +1,25 @@
-<div class="space-y-3 border-t border-pottery/20 pt-4">
+<div class="space-y-3 pt-4" style="border-top: 1px solid #E8E2D9;">
     <div class="flex justify-between text-sm">
-        <span class="text-stone">Итого • {{ cart.total_items }} товар</span>
-        <span class="text-stone">{{ total_price }} ₽</span>
+        <span style="color: #7A685A;">Итого • {{ cart.total_items }} товар</span>
+        <span style="color: #7A685A;">{{ total_price }} ₽</span>
     </div>
     
     <div class="flex justify-between text-sm">
-        <span class="text-stone">Доставка</span>
-        <span class="text-stone/50">Рассчитывается</span>
+        <span style="color: #7A685A;">Доставка</span>
+        <span style="color: #7A685A;">Рассчитывается</span>
     </div>
     
     {% if discount > 0 %}
         <div class="flex justify-between text-sm">
-            <span class="text-stone">Скидка ({{ discount }}%)</span>
-            <span class="text-stone">-{{ discounted_price|default:"0" }} ₽</span>
+            <span style="color: #7A685A;">Скидка ({{ discount }}%)</span>
+            <span style="color: #7A685A;">-{{ discounted_price|default:"0" }} ₽</span>
         </div>
     {% endif %}
     
-    <div class="flex justify-between text-lg font-medium pt-3 border-t border-pottery/20">
-        <span class="text-potteryDark">Итого</span>
+    <div class="flex justify-between text-lg font-medium pt-3" style="border-top: 1px solid #E8E2D9;">
+        <span style="color: #4A3B32;">Итого</span>
         <div class="text-right">
-            <span class="text-potteryDark">{{ total_price }} ₽</span>
+            <span style="color: #4A3B32;">{{ total_price }} ₽</span>
         </div>
     </div>
 </div>

@@ -2,14 +2,18 @@
 <main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb and Filters -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 space-y-4 sm:space-y-0">
-        <h2 class="text-xl sm:text-2xl font-light tracking-tight text-[#4A3B32]">
-            {% if current_category %}
-                {{ current_category.name|upper }}
-            {% else %}
-                ВСЯ КОЛЛЕКЦИЯ
-            {% endif %}
-        </h2>
-        <button class="bg-[#C4A690] text-white px-4 py-2 text-sm font-medium uppercase hover:bg-[#B89A7A] transition-colors w-full sm:w-auto rounded-full" 
+        <h2 class="text-xl sm:text-2xl tracking-tight" 
+    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+    {% if current_category %}
+        {{ current_category.name|upper }}
+    {% else %}
+        ВСЯ КОЛЛЕКЦИЯ
+    {% endif %}
+</h2>
+        <button class="text-white px-4 py-2 text-sm font-medium uppercase transition-colors w-full sm:w-auto rounded-full" 
+                style="background-color: #2A2E4D; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;"
+                onmouseover="this.style.backgroundColor='#3A3F63'"
+                onmouseout="this.style.backgroundColor='#2A2E4D'"
                 hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?show_filters=true&color={{ filter_params.color|urlencode }}&min_price={{ filter_params.min_price|urlencode }}&max_price={{ filter_params.max_price|urlencode }}&min_size={{ filter_params.min_size|urlencode }}&max_size={{ filter_params.max_size|urlencode }}&glaze_type={{ filter_params.glaze_type|urlencode }}" 
                 hx-target="#filter-modal-content"
                 hx-swap="innerHTML"
@@ -20,34 +24,45 @@
 
     <!-- Filter Modal Container -->
     <div id="filter-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div id="filter-modal-content" class="bg-white rounded-lg max-w-md w-full"></div>
+        <div id="filter-modal-content" class="bg-white rounded-2xl max-w-md w-full"></div>
     </div>
 
-    <!-- Active Filters (опционально) -->
+    <!-- Active Filters -->
     {% if filter_params.color or filter_params.glaze_type or filter_params.min_price or filter_params.max_price or filter_params.min_size or filter_params.max_size %}
-    <div class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-[#E8E2D9]">
+    <div class="flex flex-wrap gap-2 mb-6 pb-4" style="border-bottom: 1px solid #E8E2D9;">
         {% if filter_params.color %}
-        <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#F4E9DD] rounded-full text-sm text-[#4A3B32]">
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm" 
+              style="background-color: #F4E9DD; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
             Цвет: {{ filter_params.color }}
             <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'color' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#main-content"
                     hx-push-url="true"
-                    class="ml-1 text-[#C4A690] hover:text-[#B89A7A]">&times;</button>
+                    class="ml-1 transition-colors"
+                    style="color: #2A2E4D;"
+                    onmouseover="this.style.color='#3A3F63'"
+                    onmouseout="this.style.color='#2A2E4D'">&times;</button>
         </span>
         {% endif %}
         {% if filter_params.glaze_type %}
-        <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#F4E9DD] rounded-full text-sm text-[#4A3B32]">
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm" 
+              style="background-color: #F4E9DD; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
             Глазурь: {{ filter_params.glaze_type }}
             <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?{% for key, value in filter_params.items %}{% if key != 'glaze_type' and key != 'q' and value %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}q={{ filter_params.q|urlencode }}"
                     hx-target="#main-content"
                     hx-push-url="true"
-                    class="ml-1 text-[#C4A690] hover:text-[#B89A7A]">&times;</button>
+                    class="ml-1 transition-colors"
+                    style="color: #2A2E4D;"
+                    onmouseover="this.style.color='#3A3F63'"
+                    onmouseout="this.style.color='#2A2E4D'">&times;</button>
         </span>
         {% endif %}
         <button hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}?q={{ filter_params.q|urlencode }}"
                 hx-target="#main-content"
                 hx-push-url="true"
-                class="text-sm text-[#C4A690] hover:text-[#B89A7A] underline">
+                class="text-sm underline transition-colors"
+                style="color: #2A2E4D; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;"
+                onmouseover="this.style.color='#3A3F63'"
+                onmouseout="this.style.color='#2A2E4D'">
             Сбросить все
         </button>
     </div>
@@ -55,8 +70,8 @@
 
     <!-- Results Count -->
     <div class="mb-6">
-        <p class="text-sm text-[#7A685A]">
-            Найдено <span class="font-medium text-[#4A3B32]">{{ products|length }}</span> изделий
+        <p class="text-sm" style="color: #7A685A; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
+            Найдено <span class="font-medium" style="color: #4A3B32;">{{ products|length }}</span> изделий
         </p>
     </div>
 
@@ -64,35 +79,41 @@
     {% if products %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
         {% for product in products %}
-        <div class="product-card group cursor-pointer" 
+        <div class="product-card group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300" 
+             style="background: white; border: 1px solid #E8E2D9;"
              hx-get="{% url 'products:product_detail' product.slug %}"
              hx-target="#main-content"
              hx-push-url="true">
-            <div class="aspect-square overflow-hidden bg-[#F4E9DD] rounded-lg mb-4">
+            <div class="aspect-square overflow-hidden bg-[#F4E9DD]">
                 {% if product.main_image %}
                     <img src="{{ product.main_image.url }}" 
                          alt="{{ product.name }}" 
-                         class="product-image w-full h-full object-cover">
+                         class="product-image w-full h-full object-cover transition-transform duration-500">
                 {% else %}
                     <div class="product-image w-full h-full bg-[#E8E2D9] flex items-center justify-center">
-                        <span class="text-[#7A685A] text-sm">No Image</span>
+                        <span class="text-sm" style="color: #7A685A; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">No Image</span>
                     </div>
                 {% endif %}
             </div>
-            <div class="text-center">
-                <h3 class="text-sm font-medium text-[#4A3B32] mb-1 uppercase tracking-wide">{{ product.name }}</h3>
+            <div class="p-4 text-center">
+                <h3 class="text-sm font-medium mb-1 uppercase tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">{{ product.name }}</h3>
                 {% if product.color %}
-                <p class="text-xs text-[#7A685A] mb-1">{{ product.color|capfirst }}</p>
+                <p class="text-xs mb-1" style="color: #7A685A; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">{{ product.color|capfirst }}</p>
                 {% endif %}
                 {% if product.glaze_type and product.glaze_type != 'none' %}
-                <span class="glaze-badge text-[10px]">{{ product.get_glaze_type_display }}</span>
+                <span class="inline-block text-[10px] px-2 py-0.5 rounded-full" 
+                      style="background-color: #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
+                    {{ product.get_glaze_type_display }}
+                </span>
                 {% endif %}
-                <p class="text-sm font-medium text-[#4A3B32] mt-1">{{ product.price }} ₽</p>
+                <p class="text-sm font-medium mt-2" style="color: #2A2E4D; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">{{ product.price }} ₽</p>
                 {% with sizes=product.product_sizes.all %}
                 {% if sizes %}
-                <div class="flex flex-wrap justify-center gap-1.5 mt-2">
+                <div class="flex flex-wrap justify-center gap-1.5 mt-3">
                     {% for ps in sizes|slice:":2" %}
-                    <span class="text-[9px] px-2 py-0.5 bg-[#D9E0D2] rounded-full text-[#4A3B32]">
+                    <span class="text-[9px] px-2 py-0.5 rounded-full" 
+                          style="background-color: #F4E9DD; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
                         {{ ps.size.get_attribute_type_display }}: {{ ps.value }}
                     </span>
                     {% endfor %}
@@ -105,13 +126,15 @@
     </div>
     {% else %}
     <div class="text-center py-20">
-        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-[#F4E9DD] flex items-center justify-center">
-            <svg class="w-10 h-10 text-[#C4A690]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" 
+             style="background-color: #F4E9DD;">
+            <svg class="w-10 h-10" style="color: #2A2E4D;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
             </svg>
         </div>
-        <h3 class="text-2xl font-light text-[#4A3B32] mb-4">Товары не найдены</h3>
-        <p class="text-[#7A685A] mb-8">
+        <h3 class="text-2xl font-light mb-4" 
+            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Товары не найдены</h3>
+        <p class="mb-8" style="color: #7A685A; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
             {% if current_category %}
                 В этой категории пока нет товаров.
             {% else %}
@@ -122,7 +145,10 @@
            hx-get="{% url 'products:index' %}" 
            hx-target="#main-content" 
            hx-push-url="true"
-           class="inline-block bg-[#C4A690] text-white px-6 py-3 text-sm font-medium uppercase hover:bg-[#B89A7A] transition-colors rounded-full">
+           class="inline-block px-6 py-3 text-sm font-medium uppercase transition-colors rounded-full"
+           style="background-color: #2A2E4D; color: white; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;"
+           onmouseover="this.style.backgroundColor='#3A3F63'"
+           onmouseout="this.style.backgroundColor='#2A2E4D'">
             На главную
         </a>
     </div>
@@ -136,13 +162,12 @@
         productCards.forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-4px)';
-                this.style.transition = 'transform 0.3s ease';
+                this.style.boxShadow = '0 8px 20px rgba(42, 46, 77, 0.1)';
             });
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
             });
         });
     })();
-    
-    
 </script>

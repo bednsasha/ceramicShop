@@ -6,196 +6,201 @@
         <div class="space-y-6">
             <!-- Breadcrumb -->
             <div>
-                <nav class="flex items-center space-x-2 text-sm text-stone">
+                <nav class="flex items-center space-x-2 text-sm" style="color: #7A685A;">
                     <a href="{% url 'products:index' %}" 
                        hx-get="{% url 'products:index' %}" 
                        hx-target="#main-content" 
                        hx-push-url="true"
-                       class="hover:text-terracotta transition-colors">Главная</a>
-                    <span class="mx-2 text-pottery">/</span>
-                    <span class="font-medium text-potteryDark">Оформление заказа</span>
+                       class="hover:text-[#2A2E4D] transition-colors">Главная</a>
+                    <span class="mx-2" style="color: #C4A690;">/</span>
+                    <span class="font-medium" style="color: #4A3B32;">Оформление заказа</span>
                 </nav>
             </div>
 
             <!-- Contact Information -->
-            <div class="bg-cream rounded-xl soft-border p-6">
-                <h2 class="font-serif text-xl text-potteryDark mb-4">Контактная информация</h2>
+            <div class="p-6" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+                <h2 class="text-xl mb-4 tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                    Контактная информация
+                </h2>
                 
-                <form method="post" id="order-form" hx-post="{% url 'orders:checkout' %}" hx-target="#main-content" hx-swap="outerHTML">
-                    {% csrf_token %}
+               
+                    <form method="post" id="order-form" hx-post="{% url 'orders:checkout' %}" hx-target="#main-content" hx-swap="outerHTML">
+                        {% csrf_token %}
                     
                     <div class="space-y-4">
                         <div>
-                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Email</label>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Email</label>
                             {{ form.email }}
                             {% if form.email.errors %}
-                                <div class="text-terracotta text-sm mt-1">{{ form.email.errors }}</div>
+                                <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.email.errors }}</div>
                             {% endif %}
                         </div>
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" name="newsletter" class="h-4 w-4 text-terracotta border-pottery/30 rounded focus:ring-terracotta">
-                            <span class="text-sm text-stone">Получать новости и предложения</span>
+                            <input type="checkbox" name="newsletter" class="h-4 w-4 rounded" style="accent-color: #2A2E4D; border-color: #E8E2D9;">
+                            <span class="text-sm" style="color: #7A685A;">Получать новости и предложения</span>
                         </label>
                     </div>
                 
                     <!-- Shipping Address -->
-                    <div class="mt-6 pt-6 border-t border-pottery/20">
-                        <h2 class="font-serif text-xl text-potteryDark mb-4">Адрес доставки</h2>
+                    <div class="mt-6 pt-6" style="border-top: 1px solid #E8E2D9;">
+                        <h2 class="text-xl mb-4 tracking-wide" 
+                            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                            Адрес доставки
+                        </h2>
                         <div class="space-y-4">
                             <div>
-                                <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Страна</label>
+                                <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Страна</label>
                                 {{ form.country }}
                                 {% if form.country.errors %}
-                                    <div class="text-terracotta text-sm mt-1">{{ form.country.errors }}</div>
+                                    <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.country.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Имя</label>
+                                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Имя</label>
                                     {{ form.first_name }}
                                     {% if form.first_name.errors %}
-                                        <div class="text-terracotta text-sm mt-1">{{ form.first_name.errors }}</div>
+                                        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.first_name.errors }}</div>
                                     {% endif %}
                                 </div>
                                 <div>
-                                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Фамилия</label>
+                                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Фамилия</label>
                                     {{ form.last_name }}
                                     {% if form.last_name.errors %}
-                                        <div class="text-terracotta text-sm mt-1">{{ form.last_name.errors }}</div>
+                                        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.last_name.errors }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div>
-                                <label for="{{ form.address1.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Адрес</label>
+                                <label for="{{ form.address1.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Адрес</label>
                                 {{ form.address1 }}
                                 {% if form.address1.errors %}
-                                    <div class="text-terracotta text-sm mt-1">{{ form.address1.errors }}</div>
+                                    <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.address1.errors }}</div>
                                 {% endif %}
                             </div>
                             <div>
-                                <label for="{{ form.address2.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Квартира/офис (необязательно)</label>
+                                <label for="{{ form.address2.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Квартира/офис (необязательно)</label>
                                 {{ form.address2 }}
                                 {% if form.address2.errors %}
-                                    <div class="text-terracotta text-sm mt-1">{{ form.address2.errors }}</div>
+                                    <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.address2.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="grid grid-cols-3 gap-4">
                                 <div>
-                                    <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Город</label>
+                                    <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Город</label>
                                     {{ form.city }}
                                     {% if form.city.errors %}
-                                        <div class="text-terracotta text-sm mt-1">{{ form.city.errors }}</div>
+                                        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.city.errors }}</div>
                                     {% endif %}
                                 </div>
                                 <div>
-                                    <label for="{{ form.province.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Регион</label>
+                                    <label for="{{ form.province.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Регион</label>
                                     {{ form.province }}
                                     {% if form.province.errors %}
-                                        <div class="text-terracotta text-sm mt-1">{{ form.province.errors }}</div>
+                                        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.province.errors }}</div>
                                     {% endif %}
                                 </div>
                                 <div>
-                                    <label for="{{ form.postal_code.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Индекс</label>
+                                    <label for="{{ form.postal_code.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Индекс</label>
                                     {{ form.postal_code }}
                                     {% if form.postal_code.errors %}
-                                        <div class="text-terracotta text-sm mt-1">{{ form.postal_code.errors }}</div>
+                                        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.postal_code.errors }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div>
-                                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Телефон</label>
+                                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Телефон</label>
                                 {{ form.phone }}
                                 {% if form.phone.errors %}
-                                    <div class="text-terracotta text-sm mt-1">{{ form.phone.errors }}</div>
+                                    <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.phone.errors }}</div>
                                 {% endif %}
                             </div>
-                            <div>
-                                <label for="{{ form.company.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Компания (необязательно)</label>
-                                {{ form.company }}
-                                {% if form.company.errors %}
-                                    <div class="text-terracotta text-sm mt-1">{{ form.company.errors }}</div>
-                                {% endif %}
-                            </div>
+                            <!-- Special Instructions -->
+<div class="mt-6 pt-6" style="border-top: 1px solid #E8E2D9;">
+    <label for="{{ form.special_instructions.id_for_label }}" class="block text-sm font-medium mb-1" style="color: #7A685A;">Комментарий к заказу (необязательно)</label>
+    {{ form.special_instructions }}
+    {% if form.special_instructions.errors %}
+        <div class="text-sm mt-1" style="color: #2A2E4D;">{{ form.special_instructions.errors }}</div>
+    {% endif %}
+</div>
                             <div>
                                 <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="checkbox" name="save_info" class="h-4 w-4 text-terracotta border-pottery/30 rounded focus:ring-terracotta">
-                                    <span class="text-sm text-stone">Сохранить информацию на будущее</span>
+                                    <input type="checkbox" name="save_info" class="h-4 w-4 rounded" style="accent-color: #2A2E4D; border-color: #E8E2D9;">
+                                    <span class="text-sm" style="color: #7A685A;">Сохранить информацию на будущее</span>
                                 </label>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Special Instructions -->
-                    <div class="mt-6 pt-6 border-t border-pottery/20">
-                        <label for="{{ form.special_instructions.id_for_label }}" class="block text-sm font-medium text-stone mb-1">Комментарий к заказу (необязательно)</label>
-                        {{ form.special_instructions }}
-                    </div>
                 
                     <!-- Payment Button -->
-                    <div class="mt-6">
-                        <input type="hidden" name="payment_provider" id="payment_provider" value="yookassa">
-                        <button type="submit" 
-                                name="create_order" 
-                                value="create_order" 
-                                class="w-full btn-primary py-3 px-6 text-sm font-medium tracking-wide">
-                            Оплатить заказ
-                        </button>
-                    </div>
+<div class="mt-6">
+    <button type="submit" 
+            name="create_order" 
+            value="create_order" 
+            class="w-full py-3 px-6 text-sm font-medium uppercase tracking-wide transition-all duration-300 rounded-full hover:shadow-md active:scale-[0.98]"
+            style="background-color: #2A2E4D; color: white; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
+        Оплатить через YooKassa
+    </button>
+</div>
                 </form>
 
                 <!-- Refund Policy -->
                 <div class="text-center mt-6">
-                    <a href="#" class="text-xs text-stone/60 hover:text-terracotta transition-colors underline">Политика возврата</a>
+                    <a href="#" class="text-xs transition-colors underline" style="color: #7A685A;">Политика возврата</a>
                 </div>
             </div>
         </div>
 
         <!-- Right Column - Order Summary -->
-        <div class="bg-cream rounded-xl soft-border p-6 h-fit sticky top-24">
-            <h2 class="font-serif text-xl text-potteryDark mb-4">Ваш заказ</h2>
+        <div class="p-6 h-fit sticky top-24" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+            <h2 class="text-xl mb-4 tracking-wide" 
+                style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                Ваш заказ
+            </h2>
             
             <!-- Cart Items -->
             <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
                 {% for item in cart_items %}
-                    <div class="flex items-center space-x-4 pb-4 border-b border-pottery/20 last:border-0">
+                    <div class="flex items-center space-x-4 pb-4 last:border-0" style="border-bottom: 1px solid #E8E2D9;">
                         <div class="relative w-16 h-16 flex-shrink-0">
                             {% if item.product.main_image %}
-                                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg soft-border">
+                                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded-lg" style="border: 1px solid #E8E2D9;">
                             {% else %}
-                                <div class="w-full h-full bg-cream rounded-lg soft-border flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-pottery/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-full h-full rounded-lg flex items-center justify-center" style="background-color: #F4E9DD; border: 1px solid #E8E2D9;">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #C4A690;">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                 </div>
                             {% endif %}
-                            <span class="absolute -top-2 -right-2 w-5 h-5 bg-terracotta text-white text-xs rounded-full flex items-center justify-center">{{ item.quantity }}</span>
+                            <span class="absolute -top-2 -right-2 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center" style="background-color: #2A2E4D;">{{ item.quantity }}</span>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-medium text-sm text-potteryDark">{{ item.product.name }}</h3>
-                            <p class="text-xs text-stone">{{ item.product_size.size.get_attribute_type_display }}: {{ item.product_size.value }}</p>
+                            <h3 class="font-medium text-sm" style="color: #4A3B32;">{{ item.product.name }}</h3>
+                            <p class="text-xs" style="color: #7A685A;">{{ item.product_size.size.get_attribute_type_display }}: {{ item.product_size.value }}</p>
                         </div>
                         <div class="text-right">
-                            <span class="font-medium text-potteryDark">{{ item.product.price }} ₽</span>
+                            <span class="font-medium" style="color: #4A3B32;">{{ item.product.price }} ₽</span>
                         </div>
                     </div>
                 {% endfor %}
             </div>
 
             <!-- Order Summary -->
-            <div id="order-summary" class="space-y-3 border-t border-pottery/20 pt-4">
+            <div id="order-summary" class="space-y-3 pt-4" style="border-top: 1px solid #E8E2D9;">
                 <div class="flex justify-between text-sm">
-                    <span class="text-stone">Товаров • {{ cart.total_items }}</span>
-                    <span class="text-stone">{{ total_price }} ₽</span>
+                    <span style="color: #7A685A;">Товаров • {{ cart.total_items }}</span>
+                    <span style="color: #7A685A;">{{ total_price }} ₽</span>
                 </div>
                 
                 <div class="flex justify-between text-sm">
-                    <span class="text-stone">Доставка</span>
-                    <span class="text-stone/50">Рассчитывается</span>
+                    <span style="color: #7A685A;">Доставка</span>
+                    <span style="color: #7A685A;">Рассчитывается</span>
                 </div>
                 
-                <div class="flex justify-between text-lg font-medium pt-3 border-t border-pottery/20">
-                    <span class="text-potteryDark">Итого</span>
-                    <span class="text-potteryDark">{{ total_price }} ₽</span>
+                <div class="flex justify-between text-lg font-medium pt-3" style="border-top: 1px solid #E8E2D9;">
+                    <span style="color: #4A3B32;">Итого</span>
+                    <span style="color: #4A3B32;">{{ total_price }} ₽</span>
                 </div>
             </div>
         </div>
@@ -206,38 +211,39 @@
     /* Form input styles */
     input, select, textarea {
         width: 100%;
-        border: 1px solid rgba(210, 187, 165, 0.3);
-        border-radius: 0.5rem;
+        border: 1px solid #E8E2D9;
+        border-radius: 0.75rem;
         padding: 0.625rem 1rem;
         font-size: 0.875rem;
-        color: #8B7D6B;
-        background-color: rgba(250, 247, 242, 0.5);
+        color: #4A3B32;
+        background-color: white;
         transition: all 0.3s ease;
+        font-family: 'Chiron GoRound TC', 'Inter', sans-serif;
     }
     
     input:focus, select:focus, textarea:focus {
         outline: none;
-        border-color: #E07A5F;
-        ring: 1px solid #E07A5F;
+        border-color: #2A2E4D;
+        box-shadow: 0 0 0 2px rgba(42, 46, 77, 0.1);
     }
     
     input::placeholder, textarea::placeholder {
-        color: rgba(139, 125, 107, 0.5);
+        color: #C4A690;
     }
     
     .soft-border {
-        border: 1px solid rgba(210, 187, 165, 0.3);
+        border: 1px solid #E8E2D9;
     }
     
     .btn-primary {
-        background-color: #E07A5F;
+        background-color: #2A2E4D;
         color: white;
         border-radius: 9999px;
         transition: all 0.3s ease;
     }
     
     .btn-primary:hover {
-        background-color: #C86A50;
+        background-color: #3A3F63;
         transform: translateY(-2px);
     }
 </style>

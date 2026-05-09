@@ -1,4 +1,5 @@
 
+from yookassa import Configuration
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -121,6 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static_src',  
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
@@ -143,5 +147,4 @@ YOOKASSA_SECRET_KEY = os.getenv('YOOKASSA_SECRET_KEY')
 YOOKASSA_VAT_CODE = 1  # Код НДС (1 - без НДС)
 
 # init YooKassa
-from yookassa import Configuration
 Configuration.configure(YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY)

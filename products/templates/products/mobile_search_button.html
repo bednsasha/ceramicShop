@@ -1,7 +1,8 @@
-<!-- Mobile Search Button -->
-<button hx-get="{% url 'products:catalog_all' %}?show_search=true" 
-        hx-target="#mobile-search-wrapper" 
+<button id="mobile-search-button" 
+        hx-get="/catalog/?show_search=true&mobile=true" 
+        hx-target="#mobile-search-container" 
         hx-swap="innerHTML"
-        class="w-full text-left text-gray-600 hover:text-terracotta py-2 text-sm tracking-wide">
-    🔍 Поиск
+        class="block text-sm font-medium text-white/80 hover:text-white py-1 uppercase tracking-wide"
+        style="font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
+    ПОИСК
 </button>

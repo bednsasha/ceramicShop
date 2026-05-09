@@ -1,31 +1,31 @@
-<div id="cart-modal" class="fixed right-0 top-0 h-screen w-full max-w-md bg-white shadow-2xl z-50 transition-transform duration-300">
+<div id="cart-modal" class="fixed right-0 top-0 h-screen w-full max-w-md bg-[#FDFBF7] shadow-2xl z-50 transition-transform duration-300">
     <div class="h-full flex flex-col">
         <!-- Cart Header -->
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-            <h1 class="text-2xl font-bold">КОРЗИНА (<span id="cart-count">{{ cart.total_items }}</span>)</h1>
-            <button onclick="closeCart()" class="text-2xl hover:text-gray-600">×</button>
+        <div class="flex justify-between items-center p-6 border-b border-[#E8E2D9]">
+            <h1 class="text-2xl font-light tracking-wide text-[#2A2E4D]">КОРЗИНА (<span id="cart-count">{{ cart.total_items }}</span>)</h1>
+            <button onclick="closeCart()" class="text-3xl text-[#4A3B32]/50 hover:text-[#2A2E4D] transition-colors duration-200 focus:outline-none">&times;</button>
         </div>
 
         <!-- Cart Items -->
         <div class="flex-1 overflow-y-auto p-6">
-            <div id="cart-items" class="space-y-8">
+            <div id="cart-items" class="space-y-6">
                 {% for item in cart_items %}
                     {% include 'cart/cart_item.html' %}
                 {% empty %}
-                    <div class="text-center py-20 text-gray-500">
-                        <p class="text-lg mb-4">Ваша корзина пуста</p>
-                        <button onclick="closeCart()" class="text-sm underline">Продолжить покупки</button>
+                    <div class="text-center py-20">
+                        <p class="text-lg mb-4 text-[#7A685A]">Ваша корзина пуста</p>
+                        <button onclick="closeCart()" class="text-sm text-[#2A2E4D] underline hover:no-underline transition-colors">Продолжить покупки</button>
                     </div>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Cart Footer -->
-        <div id="cart-summary" class="border-t border-gray-200 p-6">
+        <div id="cart-summary" class="border-t border-[#E8E2D9] p-6 bg-white/50">
             {% if cart_items %}
                 {% include 'cart/cart_summary.html' %}
             {% else %}
-                <div class="text-center text-gray-500">
+                <div class="text-center text-[#7A685A]">
                     <p>Ваша корзина пуста</p>
                 </div>
             {% endif %}
@@ -34,20 +34,9 @@
 </div>
 
 <!-- Cart Overlay -->
-<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40"></div>
+<div id="cart-overlay" class="fixed inset-0 bg-[#2A2E4D]/40 z-40"></div>
 
 <style>
-    #cart-modal {
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
-    }
-    #cart-modal.open {
-        transform: translateX(0);
-    }
-    #cart-modal.closed {
-        transform: translateX(100%);
-    }
-    
     #cart-overlay {
         opacity: 0;
         visibility: hidden;
@@ -57,71 +46,77 @@
         opacity: 1;
         visibility: visible;
     }
+     #cart-overlay.closed {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    #cart-modal .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+    #cart-modal .overflow-y-auto::-webkit-scrollbar-track {
+        background: #E8E2D9;
+        border-radius: 3px;
+    }
+    #cart-modal .overflow-y-auto::-webkit-scrollbar-thumb {
+        background: #2A2E4D;
+        border-radius: 3px;
+    }
+    #cart-modal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+        background: #3A3F63;
+    }
 </style>
 
 <script>
-    let isCartAnimating = false;
-    
     function openCart() {
-        if (isCartAnimating) return;
-        
         const modal = document.getElementById('cart-modal');
         const overlay = document.getElementById('cart-overlay');
-        
         if (modal && overlay) {
-            isCartAnimating = true;
             modal.classList.remove('closed');
             modal.classList.add('open');
             overlay.classList.remove('closed');
             overlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-            
-            setTimeout(() => {
-                isCartAnimating = false;
-            }, 300);
             console.log('Cart modal opened');
+        } else {
+            console.error('Cart modal or overlay not found');
         }
     }
 
     function closeCart() {
-        if (isCartAnimating) return;
-        
         const modal = document.getElementById('cart-modal');
         const overlay = document.getElementById('cart-overlay');
-        
         if (modal && overlay) {
-            isCartAnimating = true;
             modal.classList.remove('open');
             modal.classList.add('closed');
             overlay.classList.remove('open');
             overlay.classList.add('closed');
-            document.body.style.overflow = '';
-            
+            console.log('Cart modal closed');
             setTimeout(() => {
-                isCartAnimating = false;
                 const container = document.getElementById('cart-container');
-                if (container && !modal.classList.contains('open')) {
+                if (container) {
                     container.innerHTML = '';
                 }
             }, 300);
-            console.log('Cart modal closed');
+        } else {
+            console.error('Cart modal or overlay not found');
         }
     }
 
-    // Используем один обработчик с флагом
-    let cartModalLoaded = false;
-    
+    // Trigger open animation when modal is loaded via HTMX
     document.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.detail.target.id === 'cart-container' && !cartModalLoaded) {
-            cartModalLoaded = true;
-            console.log('Cart content loaded, opening modal');
-            setTimeout(() => {
-                openCart();
-                // Сбрасываем флаг через секунду
-                setTimeout(() => {
-                    cartModalLoaded = false;
-                }, 500);
-            }, 50);
+        console.log('HTMX afterSwap event triggered', evt.detail.elt.id);
+        if (evt.detail.elt.id === 'cart-modal') {
+            console.log('Cart modal loaded, triggering open animation');
+            openCart();
+        }
+    });
+
+    // Fallback: Try opening cart on DOMContentLoaded if modal exists
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('cart-modal');
+        if (modal) {
+            console.log('Cart modal found on DOMContentLoaded, triggering open animation');
+            openCart();
         }
     });
 </script>

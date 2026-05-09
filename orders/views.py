@@ -53,7 +53,7 @@ class CheckoutView(CartMixin, View):
                 return TemplateResponse(request, 'orders/empty_cart.html', {'message': 'Корзина пуста'})
             return redirect('cart:cart_modal')
         
-        payment_provider = request.POST.get('payment_provider')
+        
         
         form = OrderForm(request.POST, user=request.user)
         
@@ -63,17 +63,16 @@ class CheckoutView(CartMixin, View):
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 email=form.cleaned_data['email'],
-                company=form.cleaned_data['company'],
-                address1=form.cleaned_data['address1'],
-                address2=form.cleaned_data['address2'],
-                city=form.cleaned_data['city'],
-                country=form.cleaned_data['country'],
-                province=form.cleaned_data['province'],
-                postal_code=form.cleaned_data['postal_code'],
-                phone=form.cleaned_data['phone'],
-                special_instructions='',
+                company=form.cleaned_data.get('company', ''),
+                address1=form.cleaned_data.get('address1', ''),
+                address2=form.cleaned_data.get('address2', ''),
+                city=form.cleaned_data.get('city', ''),
+                country=form.cleaned_data.get('country', ''),
+                province=form.cleaned_data.get('province', ''),
+                postal_code=form.cleaned_data.get('postal_code', ''),
+                phone=form.cleaned_data.get('phone', ''),
+                special_instructions=form.cleaned_data.get('special_instructions', ''), 
                 total_price=cart.subtotal,
-                payment_provider=payment_provider,
             )
             
             # Создаем элементы заказа
@@ -87,11 +86,8 @@ class CheckoutView(CartMixin, View):
                 )
             
             try:
-                payment_url = None
-                
-                if payment_provider == 'yookassa':
-                    payment = create_yookassa_payment(order, request)
-                    payment_url = payment.confirmation.confirmation_url
+                payment = create_yookassa_payment(order, request)
+                payment_url = payment.confirmation.confirmation_url
                 
                 # Очищаем корзину
                 cart.clear()
@@ -117,13 +113,14 @@ class CheckoutView(CartMixin, View):
                 if request.headers.get('HX-Request'):
                     return TemplateResponse(request, 'orders/checkout_content.html', context)
                 return render(request, 'orders/checkout.html', context)
-        
+
         # Если форма не валидна
         context = {
             'form': form,
             'cart': cart,
             'cart_items': cart.items.all(),
             'total_price': cart.subtotal,
+            'error_message': 'Пожалуйста, исправьте ошибки в форме.'
         }
         if request.headers.get('HX-Request'):
             return TemplateResponse(request, 'orders/checkout_content.html', context)

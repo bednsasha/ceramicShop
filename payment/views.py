@@ -1,4 +1,3 @@
-# payment/views.py
 import uuid
 import logging
 import json
@@ -85,8 +84,7 @@ def create_yookassa_payment(order, request):
         
         # Сохраняем данные платежа
         order.yookassa_payment_id = payment.id
-        order.yookassa_confirmation_url = payment.confirmation.confirmation_url
-        order.payment_provider = 'yookassa'
+        
         order.save()
         
         logger.info(f"Создан платеж YooKassa {payment.id} для заказа #{order.id}")
@@ -115,13 +113,12 @@ def yookassa_webhook(request):
                 order = Order.objects.get(yookassa_payment_id=payment_id)
                 
                 if payment_status == 'succeeded':
-                    order.payment_status = 'succeeded'
                     order.status = 'processing'
                     order.save()
                     logger.info(f"Заказ #{order.id} успешно оплачен через YooKassa")
                     
                 elif payment_status == 'canceled':
-                    order.payment_status = 'canceled'
+                    
                     order.status = 'cancelled'
                     order.save()
                     logger.info(f"Платеж YooKassa для заказа #{order.id} отменен")
@@ -175,7 +172,7 @@ def yookassa_cancel(request):
         try:
             order = Order.objects.get(id=order_id)
             order.status = 'cancelled'
-            order.payment_status = 'canceled'
+            
             order.save()
         except Order.DoesNotExist:
             pass

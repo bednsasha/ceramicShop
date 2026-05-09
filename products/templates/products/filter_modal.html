@@ -1,98 +1,233 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold tracking-tight text-gray-900 uppercase">Фильтры</h2>
-        <button class="text-gray-600 hover:text-gray-900"
-                onclick="document.getElementById('filter-modal').classList.add('hidden')">
+        <h2 class="text-xl tracking-tight uppercase" 
+            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+            Фильтры
+        </h2>
+        <button class="transition-colors text-2xl" 
+                style="color: #7A685A;"
+                onmouseover="this.style.color='#2A2E4D'"
+                onmouseout="this.style.color='#7A685A'"
+                onclick="closeFilterModal()">
             ×
         </button>
     </div>
 
-    <form hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}" 
+    <form id="filter-form" 
+          hx-get="{% if current_category %}{% url 'products:catalog' current_category.slug %}{% else %}{% url 'products:catalog_all' %}{% endif %}" 
           hx-target="#main-content" 
-          hx-push-url="true">
+          hx-push-url="true"
+          hx-trigger="submit">
         <input type="hidden" name="q" value="{{ filter_params.q|default:'' }}">
         
         <div class="space-y-6">
             <!-- Color -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Цвет</h3>
+                <h3 class="text-sm font-medium mb-3 uppercase tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Цвет</h3>
                 <input type="text" 
                        name="color" 
                        value="{{ filter_params.color|default:'' }}" 
-                       class="w-full border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                       class="w-full py-2 px-3 text-sm uppercase focus:outline-none transition-all rounded-full"
+                       style="border: 1px solid #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; background-color: white;"
+                       onfocus="this.style.borderColor='#2A2E4D'"
+                       onblur="this.style.borderColor='#E8E2D9'"
+                       placeholder="Например: white, gray">
             </div>
 
             <!-- Price Range -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Цена</h3>
+                <h3 class="text-sm font-medium mb-3 uppercase tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Цена</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <input type="number" 
                            name="min_price" 
                            value="{{ filter_params.min_price|default:'' }}" 
-                           placeholder="Min" 
-                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                           placeholder="От"
+                           class="py-2 px-3 text-sm focus:outline-none transition-all rounded-full"
+                           style="border: 1px solid #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; background-color: white;"
+                           onfocus="this.style.borderColor='#2A2E4D'"
+                           onblur="this.style.borderColor='#E8E2D9'">
                     <input type="number" 
                            name="max_price" 
                            value="{{ filter_params.max_price|default:'' }}" 
-                           placeholder="Max" 
-                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                           placeholder="До"
+                           class="py-2 px-3 text-sm focus:outline-none transition-all rounded-full"
+                           style="border: 1px solid #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; background-color: white;"
+                           onfocus="this.style.borderColor='#2A2E4D'"
+                           onblur="this.style.borderColor='#E8E2D9'">
                 </div>
             </div>
 
             <!-- Size -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Размер</h3>
-                <select name="size_type" class="w-full border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                <h3 class="text-sm font-medium mb-3 uppercase tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Размер</h3>
+                <select name="size_type" id="size-type-select">
                     <option value="">Любой размер</option>
                     {% for size in sizes %}
-                    <option value="{{ size.attribute_type }}" {% if filter_params.size_type == size.attribute_type %}selected{% endif %}>
+                    <option value="{{ size.attribute_type }}" 
+                            {% if filter_params.size_type == size.attribute_type %}selected{% endif %}>
                         {{ size.get_attribute_type_display }}
                     </option>
                     {% endfor %}
                 </select>
-                <div class="grid grid-cols-2 gap-4 mt-3">
+                <div class="grid grid-cols-2 gap-4 mt-3" id="size-values-container">
                     <input type="number" 
                            name="min_size" 
+                           id="min-size-input"
                            value="{{ filter_params.min_size|default:'' }}" 
                            placeholder="от"
-                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                           class="py-2 px-3 text-sm focus:outline-none transition-all rounded-full"
+                           style="border: 1px solid #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; background-color: white;"
+                           onfocus="this.style.borderColor='#2A2E4D'"
+                           onblur="this.style.borderColor='#E8E2D9'">
                     <input type="number" 
                            name="max_size" 
+                           id="max-size-input"
                            value="{{ filter_params.max_size|default:'' }}" 
                            placeholder="до"
-                           class="border border-gray-300 py-2 px-3 text-sm uppercase focus:outline-none focus:border-gray-900">
+                           class="py-2 px-3 text-sm focus:outline-none transition-all rounded-full"
+                           style="border: 1px solid #E8E2D9; color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; background-color: white;"
+                           onfocus="this.style.borderColor='#2A2E4D'"
+                           onblur="this.style.borderColor='#E8E2D9'">
                 </div>
             </div>
 
             <!-- Glaze Type -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Тип глазури</h3>
+                <h3 class="text-sm font-medium mb-3 uppercase tracking-wide" 
+                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Тип глазури</h3>
                 <div class="space-y-2">
-                    <label class="flex items-center">
-                        <input type="radio" name="glaze_type" value="" {% if not filter_params.glaze_type %}checked{% endif %} class="mr-2">
-                        <span class="text-sm uppercase">Любая</span>
+                    <label class="flex items-center cursor-pointer group">
+                        <input type="radio" name="glaze_type" value="" {% if not filter_params.glaze_type %}checked{% endif %} 
+                               class="mr-2 w-4 h-4 transition-colors" 
+                               style="accent-color: #2A2E4D;">
+                        <span class="text-sm uppercase transition-colors group-hover:text-[#2A2E4D]" 
+                              style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">Любая</span>
                     </label>
-                    {% for value, label in product.GLAZE_CHOICES %}
-                    <label class="flex items-center">
-                        <input type="radio" name="glaze_type" value="{{ value }}" {% if filter_params.glaze_type == value %}checked{% endif %} class="mr-2">
-                        <span class="text-sm uppercase">{{ label }}</span>
+                    {% for value, label in glaze_choices %}
+                    <label class="flex items-center cursor-pointer group">
+                        <input type="radio" name="glaze_type" value="{{ value }}" {% if filter_params.glaze_type == value %}checked{% endif %} 
+                               class="mr-2 w-4 h-4 transition-colors" 
+                               style="accent-color: #2A2E4D;">
+                        <span class="text-sm uppercase transition-colors group-hover:text-[#2A2E4D]" 
+                              style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">{{ label }}</span>
                     </label>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Form Actions -->
-            <div class="flex justify-between">
+            <div class="flex justify-between gap-4 pt-4">
                 <button type="button" 
-                        class="border border-gray-300 py-2 px-4 text-sm font-medium uppercase hover:border-gray-900 transition-colors"
-                        onclick="document.getElementById('filter-modal').classList.add('hidden')">
+                        class="py-2 px-4 text-sm font-medium uppercase transition-all rounded-full"
+                        style="border: 1px solid #E8E2D9; color: #7A685A; background: white;"
+                        onmouseover="this.style.borderColor='#2A2E4D'; this.style.color='#2A2E4D'"
+                        onmouseout="this.style.borderColor='#E8E2D9'; this.style.color='#7A685A'"
+                        onclick="closeFilterModal()">
                     Отмена
                 </button>
                 <button type="submit" 
-                        class="bg-black text-white py-2 px-4 text-sm font-medium uppercase hover:bg-gray-800 transition-colors">
-                    Применить фильтры
+                        class="py-2 px-4 text-sm font-medium uppercase transition-colors rounded-full"
+                        style="background-color: #2A2E4D; color: white; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;"
+                        onmouseover="this.style.backgroundColor='#3A3F63'"
+                        onmouseout="this.style.backgroundColor='#2A2E4D'">
+                    Применить
                 </button>
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    // Отключаем/включаем поля min_size и max_size в зависимости от выбора size_type
+    const sizeTypeSelect = document.getElementById('size-type-select');
+    const minSizeInput = document.getElementById('min-size-input');
+    const maxSizeInput = document.getElementById('max-size-input');
+    const filterForm = document.getElementById('filter-form');
+    
+    function toggleSizeInputs() {
+        const hasSizeType = sizeTypeSelect && sizeTypeSelect.value !== '';
+        if (minSizeInput) minSizeInput.disabled = !hasSizeType;
+        if (maxSizeInput) maxSizeInput.disabled = !hasSizeType;
+        
+        // Меняем стиль для визуального отличия
+        if (minSizeInput) {
+            if (hasSizeType) {
+                minSizeInput.style.opacity = '1';
+                minSizeInput.style.backgroundColor = 'white';
+            } else {
+                minSizeInput.style.opacity = '0.5';
+                minSizeInput.style.backgroundColor = '#F4E9DD';
+            }
+        }
+        if (maxSizeInput) {
+            if (hasSizeType) {
+                maxSizeInput.style.opacity = '1';
+                maxSizeInput.style.backgroundColor = 'white';
+            } else {
+                maxSizeInput.style.opacity = '0.5';
+                maxSizeInput.style.backgroundColor = '#F4E9DD';
+            }
+        }
+    }
+    
+    // При изменении select
+    if (sizeTypeSelect) {
+        sizeTypeSelect.addEventListener('change', toggleSizeInputs);
+    }
+    
+    // Перед отправкой формы очищаем значения min_size/max_size, если нет size_type
+    if (filterForm) {
+        filterForm.addEventListener('htmx:beforeRequest', function() {
+            if (sizeTypeSelect && sizeTypeSelect.value === '') {
+                if (minSizeInput) minSizeInput.value = '';
+                if (maxSizeInput) maxSizeInput.value = '';
+            }
+        });
+    }
+    
+    // Синхронизация значений из URL при загрузке модального окна
+    function syncFilterValuesFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Синхронизируем size_type
+        const sizeTypeFromURL = urlParams.get('size_type');
+        if (sizeTypeSelect && sizeTypeFromURL) {
+            sizeTypeSelect.value = sizeTypeFromURL;
+        }
+        
+        // Синхронизируем min_size и max_size
+        const minSizeFromURL = urlParams.get('min_size');
+        const maxSizeFromURL = urlParams.get('max_size');
+        
+        if (minSizeInput && minSizeFromURL) {
+            minSizeInput.value = minSizeFromURL;
+        }
+        if (maxSizeInput && maxSizeFromURL) {
+            maxSizeInput.value = maxSizeFromURL;
+        }
+        
+        // Обновляем состояние полей
+        toggleSizeInputs();
+    }
+    
+    // Вызываем синхронизацию при загрузке модального окна
+    syncFilterValuesFromURL();
+    
+    // Также следим за изменениями URL (например, после применения фильтров)
+    let lastUrl = window.location.href;
+    setInterval(function() {
+        if (window.location.href !== lastUrl) {
+            lastUrl = window.location.href;
+            syncFilterValuesFromURL();
+        }
+    }, 100);
+    
+    // Функция закрытия модального окна
+    function closeFilterModal() {
+        const modal = document.getElementById('filter-modal');
+        if (modal) modal.classList.add('hidden');
+    }
+</script>

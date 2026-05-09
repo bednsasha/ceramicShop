@@ -60,7 +60,6 @@ class AddToCartView(CartMixin, View):
                 product=product
             )
         else:
-           
             product_size = product.product_sizes.filter(stock__gt=0).first()
             if not product_size:
                 return JsonResponse({
@@ -94,13 +93,7 @@ class AddToCartView(CartMixin, View):
         request.session.modified = True
         
         if request.headers.get('HX-Request'):
-            return TemplateResponse(request, 'cart/cart_modal.html', {
-                'cart': cart,
-                'cart_items': cart.items.select_related(
-                    'product',
-                    'product_size__size'
-                ).order_by('-added_at')
-            })
+             return redirect('cart:cart_modal')
         else:
             return JsonResponse({
                 'success': True,
@@ -159,7 +152,6 @@ class UpdateCartItemView(CartMixin, View):
 
 
 class RemoveCartItemView(CartMixin, View):
-
     def post(self, request, item_id):
         cart = self.get_cart(request)
         

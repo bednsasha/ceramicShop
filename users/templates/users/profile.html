@@ -16,16 +16,17 @@
     }
 </style>
 
-<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-clay">
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8" style="background-color: #FDFBF7;">
     <div class="max-w-7xl mx-auto">
-        <h1 class="font-serif text-3xl lg:text-4xl text-potteryDark text-center mb-8">
+        <h1 class="text-3xl lg:text-4xl text-center mb-8 tracking-wide" 
+            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
             Здравствуйте, {{ request.user.first_name }} {{ request.user.last_name }}
         </h1>
         
         {% if messages %}
             <div class="mb-4">
                 {% for message in messages %}
-                    <div class="text-terracotta text-sm text-center">{{ message }}</div>
+                    <div class="text-sm text-center" style="color: #2A2E4D;">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
@@ -33,27 +34,30 @@
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Sidebar -->
             <div class="lg:w-64 flex-shrink-0">
-                <div class="bg-cream rounded-xl soft-border p-6 sticky top-24">
+                <div class="p-6 sticky top-24" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
                     <nav class="space-y-3">
                         <a href="{% url 'users:profile' %}" 
                            hx-get="{% url 'users:profile' %}" 
                            hx-target="#main-content" 
                            hx-push-url="true"
-                           class="nav-link block text-stone hover:text-terracotta transition-colors py-2">
+                           class="nav-link block py-2 transition-colors duration-200"
+                           style="color: #7A685A;">
                             Профиль
                         </a>
                         <a href="{% url 'users:order_history' %}" 
                            hx-get="{% url 'users:order_history' %}" 
                            hx-target="#profile-main-content" 
                            hx-push-url="true"
-                           class="nav-link block text-stone hover:text-terracotta transition-colors py-2">
+                           class="nav-link block py-2 transition-colors duration-200"
+                           style="color: #7A685A;">
                             История заказов
                         </a>
                         <a href="{% url 'users:logout' %}" 
                            hx-get="{% url 'users:logout' %}" 
                            hx-target="#main-content" 
                            hx-push-url="true"
-                           class="nav-link block text-stone hover:text-terracotta transition-colors py-2">
+                           class="nav-link block py-2 transition-colors duration-200"
+                           style="color: #7A685A;">
                             Выйти
                         </a>
                     </nav>
@@ -64,78 +68,105 @@
             <div class="flex-1" id="profile-main-content">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <!-- Latest Order -->
-                    <div class="bg-cream rounded-xl soft-border p-6 card">
-                        <h2 class="font-serif text-xl text-potteryDark mb-4">Последний заказ</h2>
+                    <div class="p-6 card" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+                        <h2 class="text-xl mb-4 tracking-wide" 
+                            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                            Последний заказ
+                        </h2>
                         {% if latest_order %}
-                            <p class="text-sm text-stone">Заказ #{{ latest_order.id }}</p>
-                            <p class="text-sm text-stone mt-1">Дата: {{ latest_order.created_at|date:"d F Y" }}</p>
-                            <p class="text-sm text-stone mt-1">Статус: {{ latest_order.get_status_display }}</p>
-                            <p class="text-sm font-medium text-potteryDark mt-2">{{ latest_order.total_price }} ₽</p>
+                            <p class="text-sm" style="color: #7A685A;">Заказ #{{ latest_order.id }}</p>
+                            <p class="text-sm mt-1" style="color: #7A685A;">Дата: {{ latest_order.created_at|date:"d F Y" }}</p>
+                            <p class="text-sm mt-1" style="color: #7A685A;">Статус: {{ latest_order.get_status_display }}</p>
+                            <p class="text-sm font-medium mt-2" style="color: #4A3B32;">{{ latest_order.total_price }} ₽</p>
                             <button 
                                 hx-get="{% url 'users:order_detail' latest_order.id %}" 
                                 hx-target="#profile-main-content" 
                                 hx-push-url="true"
-                                class="mt-4 btn-outline text-sm py-2 px-4">
+                                class="mt-4 text-sm py-2 px-4 font-medium uppercase tracking-wide transition-all duration-300 rounded-full"
+                                style="border: 1.5px solid #2A2E4D; background-color: transparent; color: #2A2E4D; cursor: pointer;"
+                                onmouseover="this.style.backgroundColor='#2A2E4D'; this.style.color='white'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#2A2E4D'; this.style.transform='translateY(0)'">
                                 Подробнее
                             </button>
                         {% else %}
-                            <p class="text-sm text-stone">У вас пока нет заказов.</p>
+                            <p class="text-sm" style="color: #7A685A;">У вас пока нет заказов.</p>
                             <a href="{% url 'products:index' %}" 
                                hx-get="{% url 'products:index' %}" 
                                hx-target="#main-content" 
                                hx-push-url="true"
-                               class="inline-block mt-4 btn-primary text-sm py-2 px-4">
+                               class="inline-block mt-4 text-sm py-2 px-4 font-medium uppercase tracking-wide transition-all duration-300 rounded-full hover:shadow-md active:scale-[0.98]"
+                               style="background-color: #2A2E4D; color: white;">
                                 Начать покупки
                             </a>
                         {% endif %}
                     </div>
                     
                     <!-- Account Details -->
-                    <div class="bg-cream rounded-xl soft-border p-6 card" id="account-details-content">
-                        <h2 class="font-serif text-xl text-potteryDark mb-4">Данные аккаунта</h2>
+                    <div class="p-6 card" id="account-details-content" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+                        <h2 class="text-xl mb-4 tracking-wide" 
+                            style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                            Данные аккаунта
+                        </h2>
                         <div class="space-y-2">
-                            <p class="text-sm text-stone font-medium">Адрес доставки</p>
-                            <p class="text-sm text-stone">{{ request.user.first_name }} {{ request.user.last_name }}</p>
-                            <p class="text-sm text-stone">{{ request.user.address1|default:"Не указан" }} {{ request.user.address2|default:"" }}</p>
-                            <p class="text-sm text-stone">{{ request.user.city|default:"" }}{% if request.user.city and request.user.country %}, {% endif %}{{ request.user.country|default:"Не указана" }}</p>
+                            <p class="text-sm font-medium" style="color: #7A685A;">Адрес доставки</p>
+                            <p class="text-sm" style="color: #7A685A;">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+                            <p class="text-sm" style="color: #7A685A;">{{ request.user.address1|default:"Не указан" }} {{ request.user.address2|default:"" }}</p>
+                            <p class="text-sm" style="color: #7A685A;">{{ request.user.city|default:"" }}{% if request.user.city and request.user.country %}, {% endif %}{{ request.user.country|default:"Не указана" }}</p>
                         </div>
                         <div class="mt-4 flex gap-3">
                             <button 
                                 hx-get="{% url 'users:edit_account_details' %}" 
                                 hx-target="#account-details-content" 
                                 hx-swap="innerHTML"
-                                class="btn-outline text-sm py-2 px-4">
+                                class="text-sm py-2 px-4 font-medium uppercase tracking-wide transition-all duration-300 rounded-full"
+                                style="border: 1.5px solid #2A2E4D; background-color: transparent; color: #2A2E4D; cursor: pointer;"
+                                onmouseover="this.style.backgroundColor='#2A2E4D'; this.style.color='white'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#2A2E4D'; this.style.transform='translateY(0)'">
                                 Редактировать
                             </button>
+                             <button 
+    class="py-2 px-4 text-sm font-medium uppercase tracking-wide transition-all duration-300 rounded-full"
+    style="border: 1.5px solid #2A2E4D; background-color: transparent; color: #2A2E4D; cursor: pointer;"
+    onmouseover="this.style.borderColor='#2A2E4D'; this.style.backgroundColor='#2A2E4D'; this.style.color='white'; this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.borderColor='#E8E2D9'; this.style.backgroundColor='transparent'; this.style.color='#7A685A'; this.style.transform='translateY(0)'"
+>
+    Удалить
+</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Recommendations -->
-                <div class="bg-cream rounded-xl soft-border p-6">
-                    <h2 class="font-serif text-xl text-potteryDark mb-6">Вам также может понравиться</h2>
+                <div class="p-6" style="background-color: #FDFBF7; border: 1px solid #E8E2D9; border-radius: 1rem;">
+                    <h2 class="text-xl mb-6 tracking-wide" 
+                        style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif; font-weight: 500;">
+                        Вам также может понравиться
+                    </h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {% for product in recommended_products %}
                             <div class="group cursor-pointer" 
                                  hx-get="{% url 'products:product_detail' product.slug %}"
                                  hx-target="#main-content"
                                  hx-push-url="true">
-                                <div class="aspect-square overflow-hidden bg-cream soft-border rounded-lg mb-3">
+                                <div class="aspect-square overflow-hidden rounded-lg mb-3" style="background-color: #F4E9DD; border: 1px solid #E8E2D9;">
                                     {% if product.main_image %}
                                         <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                     {% else %}
-                                        <div class="w-full h-full bg-cream flex items-center justify-center">
-                                            <svg class="w-12 h-12 text-pottery/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-full h-full flex items-center justify-center" style="background-color: #F4E9DD;">
+                                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #C4A690;">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                             </svg>
                                         </div>
                                     {% endif %}
                                 </div>
-                                <h3 class="font-serif text-base text-potteryDark group-hover:text-terracotta transition-colors">{{ product.name }}</h3>
-                                <p class="text-stone text-sm mt-1">{{ product.price }} ₽</p>
+                                <h3 class="text-base transition-colors duration-200 group-hover:text-[#2A2E4D]" 
+                                    style="color: #4A3B32; font-family: 'Chiron GoRound TC', 'Inter', sans-serif;">
+                                    {{ product.name }}
+                                </h3>
+                                <p class="text-sm mt-1" style="color: #7A685A;">{{ product.price }} ₽</p>
                             </div>
                         {% empty %}
-                            <p class="text-sm text-stone col-span-full text-center py-8">Нет рекомендаций</p>
+                            <p class="text-sm col-span-full text-center py-8" style="color: #7A685A;">Нет рекомендаций</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -149,8 +180,13 @@
         const navItems = document.querySelectorAll('.nav-link');
         navItems.forEach(item => {
             item.addEventListener('click', function() {
-                navItems.forEach(nav => nav.classList.remove('text-terracotta', 'font-medium', 'border-l-2', 'border-terracotta', 'pl-3'));
-                this.classList.add('text-terracotta', 'font-medium', 'border-l-2', 'border-terracotta', 'pl-3');
+                navItems.forEach(nav => {
+                    nav.style.color = '#7A685A';
+                    nav.classList.remove('font-medium', 'border-l-2', 'pl-3');
+                });
+                this.style.color = '#2A2E4D';
+                this.classList.add('font-medium', 'border-l-2', 'pl-3');
+                this.style.borderLeftColor = '#2A2E4D';
             });
         });
     });

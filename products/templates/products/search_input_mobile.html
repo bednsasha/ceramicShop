@@ -1,0 +1,31 @@
+<div class="relative w-full">
+    <input type="text" 
+           id="search-input-mobile" 
+           name="q" 
+           placeholder="ПОИСК" 
+           value="{{ search_query|default:'' }}"
+           class="w-full bg-white/10 border border-white/30 py-2 px-3 text-sm font-medium uppercase focus:outline-none focus:border-white rounded-full text-white placeholder:text-white/50"
+           style="font-family: 'Chiron GoRound TC', 'Inter', sans-serif;"
+           hx-get="/catalog/" 
+           hx-target="#main-content" 
+           hx-push-url="true"
+           hx-trigger="input delay:500ms"
+           hx-swap="innerHTML">
+    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+            hx-get="/catalog/?reset_search=true&mobile=true" 
+            hx-target="#mobile-search-container"
+            hx-swap="innerHTML">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input-mobile');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    });
+</script>
