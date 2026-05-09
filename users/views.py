@@ -34,7 +34,6 @@ def login_view(request):
             if request.headers.get('HX-Request'):
                 return HttpResponse(headers={'HX-Redirect': reverse('products:index')})
             return redirect('products:index')
-        # Если форма не валидна - возвращаем её с ошибками
     else:
         form = CustomUserLoginForm()
     
@@ -46,7 +45,6 @@ def login_view(request):
 def profile_view(request):
     user = request.user
     
-    # Получаем последний заказ пользователя
     latest_order = Order.objects.filter(user=user).order_by('-created_at').first()
     
     if request.method == 'POST':

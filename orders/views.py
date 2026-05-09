@@ -75,7 +75,6 @@ class CheckoutView(CartMixin, View):
                 total_price=cart.subtotal,
             )
             
-            # Создаем элементы заказа
             for item in cart.items.all():
                 OrderItem.objects.create(
                     order=order,

@@ -6,7 +6,6 @@
             ВОЙТИ
         </h1>
         
-        <!-- ОТОБРАЖЕНИЕ ОШИБОК ФОРМЫ -->
         {% if form.non_field_errors %}
             <div class="mb-4 p-3 rounded-lg" style="background-color: #FFE5E5; border: 1px solid #2A2E4D;">
                 {% for error in form.non_field_errors %}
@@ -95,7 +94,7 @@
 </style>
 
 <script>
-    // Автоматическое скрытие сообщения об ошибке через 5 секунд
+   
     document.addEventListener('DOMContentLoaded', function() {
         const errorDiv = document.querySelector('[style*="background-color: #FFE5E5"]');
         if (errorDiv) {

@@ -1,8 +1,7 @@
-<!-- Empty div to replace removed item -->
+
 <div style="display: none;" data-removed-item="{{ item_id }}"></div>
 
 <script>
-    // Update cart totals
     htmx.ajax('GET', '{% url "cart:cart_count" %}', {
         target: '#cart-count',
         swap: 'none',

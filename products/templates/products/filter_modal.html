@@ -141,7 +141,7 @@
 </div>
 
 <script>
-    // Отключаем/включаем поля min_size и max_size в зависимости от выбора size_type
+   
     const sizeTypeSelect = document.getElementById('size-type-select');
     const minSizeInput = document.getElementById('min-size-input');
     const maxSizeInput = document.getElementById('max-size-input');
@@ -152,7 +152,7 @@
         if (minSizeInput) minSizeInput.disabled = !hasSizeType;
         if (maxSizeInput) maxSizeInput.disabled = !hasSizeType;
         
-        // Меняем стиль для визуального отличия
+        
         if (minSizeInput) {
             if (hasSizeType) {
                 minSizeInput.style.opacity = '1';
@@ -173,12 +173,12 @@
         }
     }
     
-    // При изменении select
+  
     if (sizeTypeSelect) {
         sizeTypeSelect.addEventListener('change', toggleSizeInputs);
     }
     
-    // Перед отправкой формы очищаем значения min_size/max_size, если нет size_type
+  
     if (filterForm) {
         filterForm.addEventListener('htmx:beforeRequest', function() {
             if (sizeTypeSelect && sizeTypeSelect.value === '') {
@@ -188,17 +188,17 @@
         });
     }
     
-    // Синхронизация значений из URL при загрузке модального окна
+   
     function syncFilterValuesFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // Синхронизируем size_type
+       
         const sizeTypeFromURL = urlParams.get('size_type');
         if (sizeTypeSelect && sizeTypeFromURL) {
             sizeTypeSelect.value = sizeTypeFromURL;
         }
         
-        // Синхронизируем min_size и max_size
+      
         const minSizeFromURL = urlParams.get('min_size');
         const maxSizeFromURL = urlParams.get('max_size');
         
@@ -209,14 +209,14 @@
             maxSizeInput.value = maxSizeFromURL;
         }
         
-        // Обновляем состояние полей
+       
         toggleSizeInputs();
     }
     
-    // Вызываем синхронизацию при загрузке модального окна
+    
     syncFilterValuesFromURL();
     
-    // Также следим за изменениями URL (например, после применения фильтров)
+    
     let lastUrl = window.location.href;
     setInterval(function() {
         if (window.location.href !== lastUrl) {
@@ -225,7 +225,7 @@
         }
     }, 100);
     
-    // Функция закрытия модального окна
+    
     function closeFilterModal() {
         const modal = document.getElementById('filter-modal');
         if (modal) modal.classList.add('hidden');

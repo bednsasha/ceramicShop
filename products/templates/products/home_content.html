@@ -3,7 +3,7 @@
         overflow-x: hidden;
     }
     
-    /* Только для десктопа - фото справа */
+   
     @media (min-width: 768px) {
         .hero-image-wrapper {
             position: absolute;
@@ -24,7 +24,7 @@
         }
     }
     
-    /* Для мобильной версии - фото не мешает тексту */
+   
     @media (max-width: 767px) {
         .desktop-only-image {
             display: none;
@@ -96,8 +96,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- Фото - только на десктопе -->
+   
     <div class="desktop-only-image hero-image-wrapper">
         <img src="/static/images/plate.png" 
              alt="Ceramic plate"
@@ -107,8 +106,7 @@
 </div>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-    
-<!-- Categories Grid -->
+
 {% if categories %}
 <div>
 <h3 class="text-center transition-colors mt-3 mb-10 md:mb-12" 
@@ -125,7 +123,7 @@
             <div class="bg-white rounded-2xl py-6 px-4 text-center transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg" 
                  style="border: 3px solid #2A2E4D;">
                 
-                <!-- Иконка категории (фото) -->
+              
                 <div class="w-20 h-20 mx-auto mb-3 rounded-lg flex items-center justify-center overflow-hidden">
                     {% with category_slug=category.slug|lower %}
                         {% if "plate" in category_slug or "тарелки" in category.name|lower %}

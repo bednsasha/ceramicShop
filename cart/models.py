@@ -14,9 +14,7 @@ class Cart(models.Model):
         verbose_name_plural = 'Корзины'
     
     def __str__(self):
-        if self.user:
-            return f"Корзина {self.user.email}"
-        return f"Корзина {self.session_key}"
+        return f"Cart {self.session_key}"
     
     @property
     def total_items(self):

@@ -54,7 +54,6 @@ class CatalogView(TemplateView):
 
         filter_params = {}
 
-        # Сохраняем все параметры фильтрации
         filter_params['color'] = self.request.GET.get('color', '')
         filter_params['glaze_type'] = self.request.GET.get('glaze_type', '')
         filter_params['size_type'] = self.request.GET.get('size_type', '')  # ЭТО КЛЮЧЕВОЕ
@@ -89,14 +88,14 @@ class CatalogView(TemplateView):
         if filter_params['glaze_type']:
             products = products.filter(glaze_type=filter_params['glaze_type'])
 
-        # Размер: сохраняем значения, фильтруем только если есть size_type
+        
         min_size = self.request.GET.get('min_size')
         max_size = self.request.GET.get('max_size')
 
         filter_params['min_size'] = min_size if min_size else ''
         filter_params['max_size'] = max_size if max_size else ''
 
-        # ВАЖНО: проверяем наличие size_type перед фильтрацией
+        
         if filter_params['size_type'] and (filter_params['min_size'] or filter_params['max_size']):
             size_filters = Q(product_sizes__size__attribute_type=filter_params['size_type'])
             if filter_params['min_size']:
@@ -111,7 +110,7 @@ class CatalogView(TemplateView):
                     pass
             products = products.filter(size_filters).distinct()
 
-        # Убираем дублирование типов размеров
+      
         unique_sizes = {}
         for size in SizeAttribute.objects.all():
             if size.attribute_type not in unique_sizes:
@@ -122,7 +121,7 @@ class CatalogView(TemplateView):
             'categories': categories,
             'products': products,
             'current_category': current_category,
-            'filter_params': filter_params,  # Теперь здесь есть size_type
+            'filter_params': filter_params,  
             'sizes': sizes,
             'glaze_choices': Product.GLAZE_CHOICES,
             'search_query': query or ''

@@ -23,7 +23,7 @@ def create_yookassa_payment(order, request):
     cart = CartMixin().get_cart(request)
    
     
-    # ПРОВЕРКА ОСТАТКОВ перед созданием платежа
+    # Проверяем наличия товаров перед созданием платежа
     for item in cart.items.all():
         if item.product_size.stock < item.quantity:
             raise Exception(f'Товара "{item.product.name}" осталось только {item.product_size.stock} шт. Пожалуйста, обновите корзину.')
@@ -34,7 +34,6 @@ def create_yookassa_payment(order, request):
         description = f"{item.product.name} - {size_display}"
 
         receipt_items.append({
-            # YooKassa ограничение 128 символов
             "description": description[:128],
             "quantity": str(item.quantity),
             "amount": {
@@ -75,7 +74,6 @@ def create_yookassa_payment(order, request):
             }
         }
 
-        # Добавляем чек, если есть товары
         if receipt_items and customer:
             payment_data["receipt"] = {
                 "customer": customer,
@@ -101,9 +99,9 @@ def create_yookassa_payment(order, request):
 @csrf_exempt
 @require_POST
 def yookassa_webhook(request):
-    """
-    Webhook для обработки статуса платежа от YooKassa
-    """
+
+    #Webhook для обработки статуса платежа от YooKassa
+
     try:
         event = json.loads(request.body)
         logger.info(f"YooKassa webhook получен: {event.get('event')}")
@@ -115,7 +113,6 @@ def yookassa_webhook(request):
             try:
                 order = Order.objects.get(yookassa_payment_id=payment_id)
                 
-                # Обрабатываем ТОЛЬКО если статус 'pending' (ещё не обработан)
                 if order.status == 'pending':
                     if payment_status == 'succeeded':
                         # Проверяем остатки
@@ -126,7 +123,6 @@ def yookassa_webhook(request):
                                 order.save()
                                 return HttpResponse(status=200)
                         
-                        # УМЕНЬШАЕМ ОСТАТКИ ТОВАРОВ
                         for item in order.items.all():
                             item.size.stock -= item.quantity
                             item.size.save()
@@ -156,18 +152,15 @@ def yookassa_webhook(request):
     return HttpResponse(status=200)
 
 def yookassa_success(request):
-    """
-    Страница успешной оплаты через YooKassa
-    """
+
+    #Страница успешной оплаты через YooKassa
+   
     order_id = request.GET.get('order_id')
     order = None
 
     if order_id:
         try:
             order = Order.objects.get(id=order_id)
-            
-            # Уменьшаем остатки ТОЛЬКО если заказ ещё не обработан
-            # и статус не 'processing' (не обработан webhook'ом)
             if order.status == 'pending':
                 try:
                     # Проверяем остатки
@@ -181,7 +174,7 @@ def yookassa_success(request):
                                 return TemplateResponse(request, 'payment/yookassa_success_content.html', context)
                             return render(request, 'payment/yookassa_success.html', context)
                     
-                    # УМЕНЬШАЕМ ОСТАТКИ ТОВАРОВ
+                    
                     for item in order.items.all():
                         item.size.stock -= item.quantity
                         item.size.save()
@@ -198,7 +191,7 @@ def yookassa_success(request):
             else:
                 logger.info(f"Заказ #{order.id} уже обработан (статус: {order.status}), пропускаем списание")
             
-            # Очищаем корзину (если не очищена)
+            
             cart = CartMixin().get_cart(request)
             if cart.items.count() > 0:
                 cart.clear()
@@ -212,9 +205,7 @@ def yookassa_success(request):
         return TemplateResponse(request, 'payment/yookassa_success_content.html', context) 
     return render(request, 'payment/yookassa_success.html', context)
 def yookassa_cancel(request):
-    """
-    Страница отмены оплаты через YooKassa
-    """
+    #Страница отмены платежа через YooKassa
     order_id = request.GET.get('order_id')
     order = None
 

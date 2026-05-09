@@ -131,7 +131,6 @@ class OrderForm(forms.ModelForm):
             self.fields['province'].initial = user.province
             self.fields['postal_code'].initial = user.postal_code
             self.fields['phone'].initial = user.phone
-        # Убираем readonly с email
         self.fields['email'].widget.attrs.pop('readonly', None)
 
     def clean(self):
