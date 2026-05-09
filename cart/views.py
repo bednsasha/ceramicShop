@@ -105,7 +105,6 @@ class AddToCartView(CartMixin, View):
 
 
 class UpdateCartItemView(CartMixin, View):
-
     @transaction.atomic
     def post(self, request, item_id):
         cart = self.get_cart(request)
@@ -114,21 +113,41 @@ class UpdateCartItemView(CartMixin, View):
         quantity = int(request.POST.get('quantity', 1))
         
         if quantity < 0:
+            if request.headers.get('HX-Request'):
+                context = {
+                    'cart': cart,
+                    'cart_items': cart.items.select_related(
+                        'product',
+                        'product_size__size',
+                    ).order_by('-added_at'),
+                    'error_message': 'Неверное количество'
+                }
+                return TemplateResponse(request, 'cart/cart_modal.html', context)
             return JsonResponse({'error': 'Неверное количество'}, status=400)
         
         if quantity == 0:
             cart_item.delete()
-            message = 'Товар удален из корзины'
         else:
+            # Проверка наличия товара
             if quantity > cart_item.product_size.stock:
-                return JsonResponse({
-                    'error': f'Доступно только {cart_item.product_size.stock} шт.'
-                }, status=400)
+                error_message = f'Доступно только {cart_item.product_size.stock} шт.'
+                
+                if request.headers.get('HX-Request'):
+                    # Возвращаем HTML с ошибкой
+                    context = {
+                        'cart': cart,
+                        'cart_items': cart.items.select_related(
+                            'product',
+                            'product_size__size',
+                        ).order_by('-added_at'),
+                        'error_message': error_message
+                    }
+                    return TemplateResponse(request, 'cart/cart_modal.html', context)
+                return JsonResponse({'error': error_message}, status=400)
             
             cart_item.quantity = quantity
             cart_item.save()
-            message = 'Количество обновлено'
-     
+        
         request.session['cart_id'] = cart.id
         request.session.modified = True
         
@@ -144,12 +163,11 @@ class UpdateCartItemView(CartMixin, View):
         
         return JsonResponse({
             'success': True,
-            'message': message,
+            'message': 'Количество обновлено',
             'total_items': cart.total_items,
             'subtotal': str(cart.subtotal),
             'item_total': str(cart_item.total_price) if quantity > 0 else 0
         })
-
 
 class RemoveCartItemView(CartMixin, View):
     def post(self, request, item_id):

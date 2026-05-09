@@ -6,6 +6,15 @@
             ВОЙТИ
         </h1>
         
+        <!-- ОТОБРАЖЕНИЕ ОШИБОК ФОРМЫ -->
+        {% if form.non_field_errors %}
+            <div class="mb-4 p-3 rounded-lg" style="background-color: #FFE5E5; border: 1px solid #2A2E4D;">
+                {% for error in form.non_field_errors %}
+                    <div class="text-sm text-center" style="color: #2A2E4D;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
         {% if messages %}
             <div class="mb-4">
                 {% for message in messages %}
@@ -62,7 +71,6 @@
 </div>
 
 <style>
-    /* Form input styles */
     input {
         width: 100%;
         border: 1px solid #E8E2D9;
@@ -85,4 +93,22 @@
         color: #C4A690;
     }
 </style>
+
+<script>
+    // Автоматическое скрытие сообщения об ошибке через 5 секунд
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorDiv = document.querySelector('[style*="background-color: #FFE5E5"]');
+        if (errorDiv) {
+            setTimeout(() => {
+                errorDiv.style.transition = 'opacity 0.3s';
+                errorDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+    });
+</script>
 {% endblock %}

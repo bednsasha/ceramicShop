@@ -163,3 +163,13 @@
         transform: translateY(-2px);
     }
 </style>
+<script>
+    document.querySelectorAll('.dotted-input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+</script>

@@ -5,7 +5,11 @@
             <h1 class="text-2xl font-light tracking-wide text-[#2A2E4D]">КОРЗИНА (<span id="cart-count">{{ cart.total_items }}</span>)</h1>
             <button onclick="closeCart()" class="text-3xl text-[#4A3B32]/50 hover:text-[#2A2E4D] transition-colors duration-200 focus:outline-none">&times;</button>
         </div>
-
+        {% if error_message %}
+        <div class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-sm text-red-600 text-center">{{ error_message }}</p>
+        </div>
+        {% endif %}
         <!-- Cart Items -->
         <div class="flex-1 overflow-y-auto p-6">
             <div id="cart-items" class="space-y-6">
@@ -117,6 +121,20 @@
         if (modal) {
             console.log('Cart modal found on DOMContentLoaded, triggering open animation');
             openCart();
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorDiv = document.querySelector('#cart-modal .bg-red-50');
+        if (errorDiv) {
+            setTimeout(() => {
+                errorDiv.style.transition = 'opacity 0.3s';
+                errorDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 300);
+            }, 3000);
         }
     });
 </script>

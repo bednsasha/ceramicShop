@@ -30,14 +30,25 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            
+            if request.headers.get('HX-Request'):
+                return HttpResponse(headers={'HX-Redirect': reverse('products:index')})
             return redirect('products:index')
+        # Если форма не валидна - возвращаем её с ошибками
     else:
         form = CustomUserLoginForm()
-    return render(request, 'users/login.html', {'form': form})
     
+    if request.headers.get('HX-Request'):
+        return TemplateResponse(request, 'users/login.html', {'form': form})
+    return render(request, 'users/login.html', {'form': form})
 
 @login_required(login_url='/users/login')
 def profile_view(request):
+    user = request.user
+    
+    # Получаем последний заказ пользователя
+    latest_order = Order.objects.filter(user=user).order_by('-created_at').first()
+    
     if request.method == 'POST':
         form = CustomUserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -53,6 +64,7 @@ def profile_view(request):
     return TemplateResponse(request, 'users/profile.html', {
         'form': form,
         'user': request.user,
+        'latest_order': latest_order,
         'recommended_products': recommended_products
     })
 
